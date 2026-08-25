@@ -5,6 +5,7 @@ const catalog = {
   'morbida-presenza': { name: 'Morbida presenza', category: 'Abito · Nuovo arrivo', description: 'Una silhouette morbida, pensata per accompagnare il movimento e lasciare spazio alla persona.', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=88' },
   'linea-quotidiana': { name: 'Linea quotidiana', category: 'Completo · Versatile', description: 'Un completo da interpretare ogni giorno, tra comfort, qualità e una linea che non chiede permesso.', image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1400&q=88' },
   'un-gesto-leggero': { name: 'Un gesto leggero', category: 'Maglieria · Essenziale', description: 'La maglieria essenziale che entra nel guardaroba e resta, stagione dopo stagione.', image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1400&q=88' },
+  'tono-di-casa': { name: 'Tono di casa', category: 'Giacca · Nuovo arrivo', description: 'Una giacca da indossare con naturalezza, tra struttura morbida e il calore di un colore che sa accogliere.', image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1400&q=88' },
 } as const;
 
 type Slug = keyof typeof catalog;

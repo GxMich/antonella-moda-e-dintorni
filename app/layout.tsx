@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import CookieConsent from './components/CookieConsent';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://antonellamodaedintorni.com'),
@@ -23,5 +24,5 @@ const localBusiness = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="it"><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} /></body></html>;
+  return <html lang="it"><body>{children}<CookieConsent /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} /></body></html>;
 }

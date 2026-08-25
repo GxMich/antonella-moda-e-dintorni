@@ -25,7 +25,7 @@ export default function Home() {
     <main>
       <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
         <a className="wordmark" href="#top" aria-label="Antonella Moda e Dintorni, torna all'inizio"><span>Antonella</span><small>Moda e Dintorni</small></a>
-        <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navigazione principale">
+        <nav id="main-nav" className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navigazione principale">
           <a href="#collezione" onClick={() => setMenuOpen(false)}>Collezione</a>
           <a href="#storia" onClick={() => setMenuOpen(false)}>Il nostro modo</a>
           <a href="#boutique" onClick={() => setMenuOpen(false)}>Boutique</a>
@@ -59,7 +59,7 @@ export default function Home() {
       <section className="visit section-shell" id="boutique"><div className="section-index">04 — Vieni a trovarci</div><div className="visit-grid"><div><h2>Ci vediamo<br /><em>in Via Dante.</em></h2><p className="visit-intro">Il modo più bello di conoscere un capo è incontrarlo dal vivo. Passa a trovarci in boutique a Vercelli.</p><a className="button button-dark" href="https://www.google.com/maps/search/?api=1&query=Via+Dante+Alighieri+10+Vercelli" target="_blank" rel="noreferrer">Indicazioni per la boutique <Arrow /></a></div><div className="visit-details"><div><span>Indirizzo</span><strong>Via Carlo III di Savoia,<br />Via Dante Alighieri, 10<br />13100 Vercelli VC</strong></div><div><span>Telefono</span><a href="tel:+393318115966">+39 331 811 5966</a></div><div><span>Scrivici</span><a href="mailto:info@antonellamodaedintorni.com">info@antonellamodaedintorni.com</a></div></div></div></section>
 
       <section className="closing-cta"><p className="eyebrow">Una domanda, un desiderio, un’idea?</p><h2>Parliamone<br /><em>con calma.</em></h2><a className="button button-light" href="https://wa.me/393318115966" target="_blank" rel="noreferrer">Scrivici su WhatsApp <Arrow /></a></section>
-      <footer className="site-footer"><div className="footer-brand"><span>Antonella</span><small>Moda e Dintorni</small></div><div className="footer-links"><a href="#collezione">Collezione</a><a href="#storia">Il nostro modo</a><a href="#boutique">Boutique</a></div><div className="footer-meta"><span>Vercelli · Italia</span><span>© {new Date().getFullYear()} Antonella Moda e Dintorni</span></div></footer>
+      <footer className="site-footer"><div className="footer-brand"><span>Antonella</span><small>Moda e Dintorni</small></div><div className="footer-links"><a href="#collezione">Collezione</a><a href="#storia">Il nostro modo</a><a href="#boutique">Boutique</a><a href="/privacy">Privacy</a><a href="/cookie#preferenze">Cookie</a></div><div className="footer-meta"><span>Vercelli · Italia</span><span>© {new Date().getFullYear()} Antonella Moda e Dintorni</span></div></footer>
     </main>
   );
 }
