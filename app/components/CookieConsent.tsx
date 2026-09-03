@@ -1,12 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const STORAGE_KEY = 'antonella-cookie-preferences';
+const STORAGE_KEY = 'antonella-cookie-preferences-v1';
+
+function clearPreferenceHash() {
+  if (window.location.hash === '#preferenze') window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+}
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setVisible(!window.localStorage.getItem(STORAGE_KEY));
@@ -16,13 +21,23 @@ export default function CookieConsent() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  useEffect(() => {
+    if (!preferencesOpen) return;
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') { setPreferencesOpen(false); clearPreferenceHash(); } };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [preferencesOpen]);
+
   const save = () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ necessary: true, measurement: false }));
     setVisible(false);
     setPreferencesOpen(false);
+    clearPreferenceHash();
   };
 
   const openPreferences = () => setPreferencesOpen(true);
+  const closePreferences = () => { setPreferencesOpen(false); clearPreferenceHash(); };
 
   if (!visible && !preferencesOpen) return null;
 
@@ -32,7 +47,7 @@ export default function CookieConsent() {
         <div><p className="cookie-kicker">Privacy e preferenze</p><h2 id="cookie-title">Un piccolo gesto di chiarezza.</h2><p id="cookie-description">Questo sito usa solo strumenti tecnici necessari al funzionamento e non attiva cookie di profilazione o pubblicità.</p></div>
         <div className="cookie-actions"><button className="cookie-secondary" type="button" onClick={openPreferences}>Gestisci preferenze</button><button className="button button-dark" type="button" onClick={save}>Continua</button></div>
       </aside>}
-      {preferencesOpen && <div className="cookie-overlay" role="presentation"><section className="cookie-panel" role="dialog" aria-modal="true" aria-labelledby="preferences-title"><div className="cookie-panel-head"><div><p className="cookie-kicker">Centro preferenze</p><h2 id="preferences-title">Scegli con calma.</h2></div><button className="cookie-close" type="button" aria-label="Chiudi preferenze" onClick={() => setPreferencesOpen(false)}>×</button></div><p>Le impostazioni qui sotto descrivono gli strumenti attualmente presenti sul sito.</p><div className="cookie-category"><div><strong>Tecnici necessari</strong><span>Attivi sempre</span></div><p>Servono a ricordare la tua scelta sulle preferenze. Non vengono usati per profilazione.</p><span className="cookie-status">Necessari</span></div><div className="cookie-category is-muted"><div><strong>Misurazione aggregata</strong><span>Non attiva</span></div><p>Non utilizziamo strumenti di analytics o misurazione di terze parti in questa versione.</p><span className="cookie-status">Spenta</span></div><div className="cookie-panel-actions"><a href="/cookie">Leggi la Cookie Policy</a><button className="button button-dark" type="button" onClick={save}>Salva preferenze</button></div></section></div>}
+      {preferencesOpen && <div className="cookie-overlay" role="presentation"><section className="cookie-panel" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-description"><div className="cookie-panel-head"><div><p className="cookie-kicker">Centro preferenze</p><h2 id="preferences-title">Scegli con calma.</h2></div><button ref={closeButtonRef} className="cookie-close" type="button" aria-label="Chiudi preferenze" onClick={closePreferences}>×</button></div><p id="preferences-description">Le impostazioni qui sotto descrivono gli strumenti attualmente presenti sul sito.</p><div className="cookie-category"><div><strong>Tecnici necessari</strong><span>Attivi sempre</span></div><p>Servono a ricordare la tua scelta sulle preferenze. Non vengono usati per profilazione.</p><span className="cookie-status">Necessari</span></div><div className="cookie-category is-muted"><div><strong>Misurazione aggregata</strong><span>Non attiva</span></div><p>Non utilizziamo strumenti di analytics o misurazione di terze parti in questa versione.</p><span className="cookie-status">Spenta</span></div><div className="cookie-panel-actions"><a href="/cookie">Leggi la Cookie Policy</a><button className="button button-dark" type="button" onClick={save}>Salva preferenze</button></div></section></div>}
     </>
   );
 }
