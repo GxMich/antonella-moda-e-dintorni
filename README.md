@@ -2,6 +2,8 @@
 
 Sito vetrina completo per una boutique indipendente di abbigliamento femminile a Vercelli. Il progetto è pensato come demo commerciale realistica e come base pronta da personalizzare prima della consegna definitiva al cliente.
 
+**Sito online:** [gxmich.github.io/antonella-moda-e-dintorni](https://gxmich.github.io/antonella-moda-e-dintorni/)
+
 ## Cosa contiene
 
 - Homepage editoriale e responsive
@@ -21,7 +23,7 @@ Sito vetrina completo per una boutique indipendente di abbigliamento femminile a
 - Next.js 16 App Router
 - React 19
 - TypeScript
-- Vinext e Vite per build e hosting Sites
+- Esportazione statica e deploy automatico su GitHub Pages
 - CSS responsive personalizzato, senza librerie UI esterne
 
 ## Avvio locale
@@ -38,6 +40,8 @@ Il sito sarà disponibile all’indirizzo indicato dal terminale. Per una build 
 ```bash
 npm run build
 ```
+
+Ogni push sul branch `main` avvia il workflow in `.github/workflows/deploy-pages.yml`, genera l’esportazione statica e aggiorna GitHub Pages.
 
 Per il controllo dei tipi:
 

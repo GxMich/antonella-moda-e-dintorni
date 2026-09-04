@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   return (
     <main className="legal-page">
       <InnerHeader />
-      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Privacy<br /><em>Policy.</em></h1><p className="legal-lede">Informativa sul trattamento dei dati personali del sito antonellamodaedintorni.com, resa ai sensi dell’articolo 13 del Regolamento (UE) 2016/679.</p><p className="legal-updated">Ultimo aggiornamento: 3 settembre 2026</p>
+      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Privacy<br /><em>Policy.</em></h1><p className="legal-lede">Informativa sul trattamento dei dati personali di questo sito, resa ai sensi dell’articolo 13 del Regolamento (UE) 2016/679.</p><p className="legal-updated">Ultimo aggiornamento: 4 settembre 2026</p>
         <div className="legal-note"><strong>Da verificare prima della pubblicazione definitiva</strong><p>Completare denominazione legale, codice fiscale o partita IVA, fornitore di hosting, eventuali responsabili del trattamento e tempi di conservazione effettivi. La configurazione descritta presuppone assenza di newsletter, account, analytics, pagamenti online e moduli trasmessi o conservati dal server del sito.</p></div>
         <div className="legal-body">
           <section><h2>1. Titolare del trattamento</h2><p>Il titolare del trattamento è Antonella Moda e Dintorni, con sede operativa indicata in {business.addressLines.join(' ')}.</p><p>Contatti privacy: <a href={`mailto:${business.email}`}>{business.email}</a> · <a href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>.</p></section>

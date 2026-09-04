@@ -9,7 +9,7 @@ export default function CookiePage() {
   return (
     <main className="legal-page">
       <InnerHeader />
-      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Cookie<br /><em>Policy.</em></h1><p className="legal-lede">Informativa sull’uso di cookie, memoria locale e tecnologie analoghe sul sito antonellamodaedintorni.com.</p><p className="legal-updated">Ultimo aggiornamento: 3 settembre 2026</p>
+      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Cookie<br /><em>Policy.</em></h1><p className="legal-lede">Informativa sull’uso di cookie, memoria locale e tecnologie analoghe su questo sito.</p><p className="legal-updated">Ultimo aggiornamento: 4 settembre 2026</p>
         <div className="legal-note"><strong>Configurazione prevista per il lancio</strong><p>Il sito non attiva cookie di profilazione, pubblicità, feed social, video incorporati o analytics di terze parti. Se la configurazione cambierà, questa pagina e il centro preferenze dovranno essere aggiornati prima dell’attivazione.</p></div>
         <div className="legal-body">
           <section><h2>1. Cosa sono cookie e tecnologie analoghe</h2><p>I cookie sono piccoli file che un sito o un servizio può salvare sul dispositivo. La memoria locale del browser svolge una funzione simile, ma resta accessibile al sito che l’ha creata. Entrambi possono essere tecnici oppure, in altri contesti, usati per misurazione e profilazione.</p></section>

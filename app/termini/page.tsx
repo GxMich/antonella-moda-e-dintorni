@@ -10,7 +10,7 @@ export default function TermsPage() {
   return (
     <main className="legal-page">
       <InnerHeader />
-      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Termini di utilizzo<br /><em>e servizi.</em></h1><p className="legal-lede">Condizioni che regolano l’accesso al sito antonellamodaedintorni.com e le informazioni sui servizi presentati.</p><p className="legal-updated">Ultimo aggiornamento: 3 settembre 2026</p>
+      <article className="legal-content"><span className="section-index">Documento informativo</span><h1>Termini di utilizzo<br /><em>e servizi.</em></h1><p className="legal-lede">Condizioni che regolano l’accesso a questo sito e le informazioni sui servizi presentati.</p><p className="legal-updated">Ultimo aggiornamento: 4 settembre 2026</p>
         <div className="legal-note"><strong>Da completare prima della pubblicazione definitiva</strong><p>Inserire denominazione legale, codice fiscale o partita IVA, eventuale iscrizione al Registro Imprese e verificare il testo con il titolare o un professionista. Questa pagina è una base editoriale per la demo.</p></div>
         <div className="legal-body">
           <section><h2>1. Titolare del sito</h2><p>Il sito è riferito ad Antonella Moda e Dintorni, con sede operativa indicata in {business.addressLines.join(' ')}. Contatti: <a href={`mailto:${business.email}`}>{business.email}</a> · <a href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>.</p></section>

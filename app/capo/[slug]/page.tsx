@@ -5,6 +5,7 @@ import InnerHeader from '../../components/InnerHeader';
 import ProductCard from '../../components/ProductCard';
 import SiteFooter from '../../components/SiteFooter';
 import { business, products } from '../../content';
+import { assetPath, assetUrl } from '../../site';
 
 export function generateStaticParams() { return products.map(({ slug }) => ({ slug })); }
 
@@ -16,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${product.name} | Antonella Moda e Dintorni`,
     description: product.description,
     alternates: { canonical: `/capo/${product.slug}` },
-    openGraph: { title: product.name, description: product.description, images: [{ url: product.image, alt: product.alt }] },
-    twitter: { card: 'summary_large_image', title: product.name, description: product.description, images: [product.image] },
+    openGraph: { title: product.name, description: product.description, images: [{ url: assetUrl(product.image), alt: product.alt }] },
+    twitter: { card: 'summary_large_image', title: product.name, description: product.description, images: [assetUrl(product.image)] },
   };
 }
 
@@ -28,13 +29,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = products[productIndex];
   const related = [...products.slice(productIndex + 1), ...products.slice(0, productIndex)].slice(0, 3);
   const message = encodeURIComponent(`Ciao Antonella, vorrei avere informazioni su “${product.name}”.`);
-  const productSchema = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, image: `https://antonellamodaedintorni.com${product.image}`, description: product.description, category: product.category, brand: { '@type': 'Brand', name: business.name } };
+  const productSchema = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, image: assetUrl(product.image), description: product.description, category: product.category, brand: { '@type': 'Brand', name: business.name } };
 
   return (
     <main className="product-detail-page">
       <InnerHeader active="collezione" />
       <section className="detail-layout">
-        <div className="detail-image"><img src={product.image} alt={product.alt} /></div>
+        <div className="detail-image"><img src={assetPath(product.image)} alt={product.alt} /></div>
         <div className="detail-copy">
           <span className="section-index">Dettaglio capo</span>
           <p className="eyebrow">{product.category} · {product.badge}</p>

@@ -4,6 +4,7 @@ import CatalogExplorer from '../components/CatalogExplorer';
 import InnerHeader from '../components/InnerHeader';
 import SiteFooter from '../components/SiteFooter';
 import { business, products } from '../content';
+import { assetPath } from '../site';
 
 export const metadata: Metadata = {
   title: 'Collezione e nuovi arrivi | Antonella Moda e Dintorni',
@@ -25,7 +26,7 @@ export default function CollectionPage() {
         <CatalogExplorer products={products} />
       </section>
       <section className="collection-editorial">
-        <div className="collection-editorial-image"><img src="/images/capsule-rack-v2.png" alt="Una selezione coordinata di capi nei toni naturali" loading="lazy" /></div>
+        <div className="collection-editorial-image"><img src={assetPath('/images/capsule-rack-v2.png')} alt="Una selezione coordinata di capi nei toni naturali" loading="lazy" /></div>
         <div className="collection-editorial-copy"><span className="section-index">Più possibilità, meno rumore</span><h2>Una collezione<br /><em>che dialoga.</em></h2><p>Ogni proposta è pensata per incontrare ciò che hai già: colori compatibili, volumi facili da sovrapporre e dettagli capaci di cambiare il tono di un look.</p><Link className="text-link" href="/magazine/guardaroba-che-ti-somiglia">Come costruire il guardaroba <span className="arrow">↗</span></Link></div>
       </section>
       <section className="collection-note"><span className="section-index">Una nota importante</span><div><h2>Ogni capo ha<br /><em>la sua storia.</em></h2><p>Taglie, colori e disponibilità possono cambiare. Le schede raccontano la proposta, ma il consiglio più preciso nasce dal confronto: scrivici e saremo felici di aiutarti.</p><a className="button button-dark" href={business.whatsappUrl} target="_blank" rel="noreferrer">Chiedi informazioni <span className="arrow">↗</span></a></div></section>

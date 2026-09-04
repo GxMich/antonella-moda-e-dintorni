@@ -1,12 +1,18 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 type ServiceOption = { slug: string; title: string };
 
 export default function AppointmentForm({ whatsappUrl, serviceOptions, initialService = '' }: { whatsappUrl: string; serviceOptions: readonly ServiceOption[]; initialService?: string }) {
   const [sent, setSent] = useState(false);
+  const [selectedService, setSelectedService] = useState(initialService);
+
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('servizio');
+    if (requested && serviceOptions.some((service) => service.slug === requested)) setSelectedService(requested);
+  }, [serviceOptions]);
 
   function submitRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -39,7 +45,7 @@ export default function AppointmentForm({ whatsappUrl, serviceOptions, initialSe
     <form className="appointment-form" onSubmit={submitRequest}>
       <div className="form-grid">
         <label className="form-field"><span>Nome e cognome *</span><input name="name" autoComplete="name" required placeholder="Come possiamo chiamarti?" /></label>
-        <label className="form-field"><span>Servizio *</span><select name="service" defaultValue={initialService} required><option value="" disabled>Scegli un servizio</option>{serviceOptions.map((service) => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select></label>
+        <label className="form-field"><span>Servizio *</span><select name="service" value={selectedService} onChange={(event) => setSelectedService(event.target.value)} required><option value="" disabled>Scegli un servizio</option>{serviceOptions.map((service) => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select></label>
         <label className="form-field"><span>Giorno preferito</span><input name="date" type="date" /></label>
         <label className="form-field"><span>Fascia oraria</span><select name="time" defaultValue=""><option value="">Indifferente</option><option>Mattina</option><option>Pausa pranzo</option><option>Pomeriggio</option><option>Dopo le 18:00</option></select></label>
         <label className="form-field form-field-wide"><span>Fascia di spesa indicativa</span><select name="budget" defaultValue=""><option value="">Preferisco parlarne insieme</option><option>Fino a 100 €</option><option>100–200 €</option><option>200–350 €</option><option>Oltre 350 €</option></select></label>

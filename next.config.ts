@@ -1,5 +1,14 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {};
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const basePath = '/antonella-moda-e-dintorni';
+
+const nextConfig: NextConfig = {
+  output: isGitHubPages ? 'export' : undefined,
+  basePath: isGitHubPages ? basePath : undefined,
+  assetPrefix: isGitHubPages ? basePath : undefined,
+  trailingSlash: isGitHubPages,
+  images: { unoptimized: true },
+};
 
 export default nextConfig;

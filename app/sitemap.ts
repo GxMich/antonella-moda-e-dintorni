@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { articles, products, services } from './content';
+import { siteUrl } from './site';
+
+export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://antonellamodaedintorni.com';
+  const base = siteUrl;
   return [
     { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/collezione`, lastModified: new Date(), changeFrequency: 'weekly', priority: .9 },
