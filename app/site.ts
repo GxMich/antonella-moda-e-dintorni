@@ -1,6 +1,10 @@
 export const githubOrigin = 'https://gxmich.github.io';
 export const githubBasePath = '/antonella-moda-e-dintorni';
-export const siteUrl = `${githubOrigin}${githubBasePath}`;
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
+
+// Set NEXT_PUBLIC_SITE_URL at launch to the exact public address, including a
+// project path when the deployment is not served from the domain root.
+export const siteUrl = configuredSiteUrl || `${githubOrigin}${githubBasePath}`;
 
 export function assetPath(path: string) {
   const normalized = path.startsWith('/') ? path : `/${path}`;

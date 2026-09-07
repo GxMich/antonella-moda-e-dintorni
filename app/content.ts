@@ -15,7 +15,7 @@ export const products = [
     name: 'Morbida presenza',
     category: 'Abito',
     badge: 'Nuovo arrivo',
-    image: '/images/look-terracotta-v2.png',
+    image: '/images/look-terracotta-v2.webp',
     alt: 'Donna adulta con abito midi color terracotta e cardigan panna',
     description: 'Un abito fluido che accompagna il movimento e lascia spazio alla persona, dal mattino alla sera.',
     story: 'Il color terracotta scalda il viso e si abbina con naturalezza ai toni panna, cuoio e verde oliva. La linea morbida valorizza senza costringere.',
@@ -29,7 +29,7 @@ export const products = [
     name: 'Linea quotidiana',
     category: 'Completo',
     badge: 'Versatile',
-    image: '/images/look-sage-v2.png',
+    image: '/images/look-sage-v2.webp',
     alt: 'Donna adulta con blazer verde salvia e pantaloni ampi color avorio',
     description: 'Un completo luminoso da interpretare ogni giorno, con una giacca destrutturata e un pantalone ampio.',
     story: 'La giacca salvia è il punto di equilibrio tra eleganza e semplicità. Indossata con l’avorio rende il completo fresco, ma funziona anche con denim e nero.',
@@ -43,7 +43,7 @@ export const products = [
     name: 'Luce quieta',
     category: 'Maglieria',
     badge: 'Essenziale',
-    image: '/images/look-oatmeal-v2.png',
+    image: '/images/look-oatmeal-v2.webp',
     alt: 'Donna adulta con maglia color avena e gonna midi rosa polvere',
     description: 'Una maglia soffice e una gonna polvere per vestirsi con delicatezza, senza rinunciare al carattere.',
     story: 'Le texture morbide rendono il look accogliente e facile da portare. La gonna satinata aggiunge luce e movimento anche alle giornate più semplici.',
@@ -57,7 +57,7 @@ export const products = [
     name: 'Tono di casa',
     category: 'Giacca',
     badge: 'Icona quotidiana',
-    image: '/images/look-ink-v2.png',
+    image: '/images/look-ink-v2.webp',
     alt: 'Donna adulta con giacca antracite, top cipria e pantaloni scuri',
     description: 'Una giacca dal taglio pulito che dà struttura al guardaroba mantenendo un’attitudine naturale.',
     story: 'Il tono antracite rende la giacca facile da usare e il top cipria ne addolcisce il carattere. Una base affidabile per lavoro, cena e tempo libero.',
@@ -71,7 +71,7 @@ export const products = [
     name: 'Piccoli segni',
     category: 'Accessori',
     badge: 'Idee regalo',
-    image: '/images/accessories-v2.png',
+    image: '/images/accessories-v2.webp',
     alt: 'Borsa color cuoio, foulard botanico e piccoli orecchini su tessuti neutri',
     description: 'Accessori scelti per completare un look con misura: una borsa, un foulard e un punto di luce.',
     story: 'Un accessorio ben scelto cambia il ritmo di ciò che già possiedi. La palette botanica dialoga con beige, denim, verde, panna e terracotta.',
@@ -85,7 +85,7 @@ export const products = [
     name: 'Guardaroba essenziale',
     category: 'Selezione',
     badge: 'Capsule',
-    image: '/images/capsule-rack-v2.png',
+    image: '/images/capsule-rack-v2.webp',
     alt: 'Capsule wardrobe con camicia panna, giacca salvia, gonna terracotta, maglia e pantaloni scuri',
     description: 'Cinque capi, molte combinazioni: una piccola base pensata per semplificare le scelte quotidiane.',
     story: 'La capsule unisce colori che si parlano e volumi facili da sovrapporre. Il risultato è un guardaroba compatto, personale e realmente utilizzabile.',
@@ -99,7 +99,7 @@ export const products = [
     name: 'Oliva in movimento',
     category: 'Giacca e gonna',
     badge: 'Scelto da Antonella',
-    image: '/images/atelier-hero.png',
+    image: '/images/atelier-hero.webp',
     alt: 'Donna in boutique con giacca verde oliva e gonna color terracotta',
     description: 'Due toni naturali, una silhouette morbida e una combinazione che attraversa più stagioni.',
     story: 'Oliva e terracotta costruiscono un look caldo ma non prevedibile. La camicia chiara porta luce e permette di alleggerire l’insieme.',
@@ -113,7 +113,7 @@ export const products = [
     name: 'Trama botanica',
     category: 'Foulard',
     badge: 'Dettaglio',
-    image: '/images/styling-hands-v2.png',
+    image: '/images/styling-hands-v2.webp',
     alt: 'Mani che accostano tessuti e foulard nei toni salvia e terracotta',
     description: 'Una stampa botanica da annodare al collo, alla borsa o tra i capelli per dare nuova voce ai capi essenziali.',
     story: 'Il foulard riprende i colori della collezione e diventa un piccolo strumento di styling: basta cambiare nodo per cambiare intenzione.',
@@ -124,7 +124,21 @@ export const products = [
   },
 ] as const;
 
-export type Product = (typeof products)[number];
+export type ProductImage = {
+  src: string;
+  alt: string;
+};
+
+export type Product = (typeof products)[number] & {
+  /**
+   * Optional now, so the sample catalog stays compact. Add two to four real
+   * images here when a garment is ready to publish; the detail page will turn
+   * them into a gallery without any code change.
+   */
+  gallery?: readonly ProductImage[];
+  /** ISO date used for the sitemap when real products are published. */
+  updatedAt?: string;
+};
 
 export const services = [
   {
@@ -134,7 +148,7 @@ export const services = [
     kicker: 'Stile e vestibilità',
     summary: 'Un momento dedicato per capire cosa cerchi, quali proporzioni ti fanno sentire bene e come inserire un nuovo capo nel guardaroba che possiedi già.',
     detail: 'Ideale per un’occasione, un cambio di stagione o semplicemente per ritrovare chiarezza davanti all’armadio.',
-    image: '/images/styling-hands-v2.png',
+    image: '/images/styling-hands-v2.webp',
     alt: 'Mani che accostano tessuti e colori durante una consulenza di stile',
     duration: 'Circa 45–60 minuti',
     location: 'In boutique, su appuntamento',
@@ -154,7 +168,7 @@ export const services = [
     kicker: 'Boutique a distanza',
     summary: 'Se non riesci a passare subito, inviaci una richiesta o la foto di un capo. Ti mostriamo dettagli, colori e possibili abbinamenti disponibili.',
     detail: 'Una prima selezione pratica e personale, da confermare poi con la prova e la disponibilità del momento.',
-    image: '/images/accessories-v2.png',
+    image: '/images/accessories-v2.webp',
     alt: 'Accessori e tessuti coordinati pronti per una selezione personalizzata',
     duration: 'Risposta durante gli orari di apertura',
     location: 'Su WhatsApp',
@@ -174,7 +188,7 @@ export const services = [
     kicker: 'Tempo dedicato',
     summary: 'Concordiamo un momento tranquillo e prepariamo in anticipo alcune proposte in base all’occasione, alle taglie e ai colori che ami.',
     detail: 'Perfetto quando vuoi dedicarti alla scelta senza fretta o hai una richiesta precisa da risolvere.',
-    image: '/images/boutique-interior-v2.png',
+    image: '/images/boutique-interior-v2.webp',
     alt: 'Interno caldo e accogliente della boutique pronto per un appuntamento',
     duration: 'Circa 45 minuti',
     location: 'In boutique, su prenotazione',
@@ -194,7 +208,7 @@ export const services = [
     kicker: 'Un pensiero personale',
     summary: 'Foulard, accessori e piccoli pensieri scelti con cura. Ti aiutiamo a trovare qualcosa di personale anche quando non conosci ogni dettaglio.',
     detail: 'Le opzioni e la disponibilità delle confezioni vengono confermate direttamente dalla boutique.',
-    image: '/images/accessories-v2.png',
+    image: '/images/accessories-v2.webp',
     alt: 'Borsa, foulard e piccoli accessori scelti come idee regalo',
     duration: 'Da 15 minuti',
     location: 'In boutique o prima selezione su WhatsApp',
@@ -214,7 +228,7 @@ export const services = [
     kicker: 'Eventi senza travestimenti',
     summary: 'Costruiamo un look per cerimonie, lavoro, cene o momenti speciali partendo da come vuoi sentirti, non da una regola preconfezionata.',
     detail: 'L’obiettivo è trovare un insieme curato che resti fedele a te e che possa essere riutilizzato anche dopo l’occasione.',
-    image: '/images/look-terracotta-v2.png',
+    image: '/images/look-terracotta-v2.webp',
     alt: 'Look femminile terracotta pensato per un’occasione speciale',
     duration: 'Circa 45–60 minuti',
     location: 'In boutique, preferibilmente su appuntamento',
@@ -234,7 +248,7 @@ export const services = [
     kicker: 'Più combinazioni, meno rumore',
     summary: 'Creiamo una piccola selezione coordinata di capi che lavorano bene insieme e rendono più semplici le scelte di ogni giorno.',
     detail: 'La capsule può partire da zero oppure integrare colori e categorie che nel tuo armadio sono già presenti.',
-    image: '/images/capsule-rack-v2.png',
+    image: '/images/capsule-rack-v2.webp',
     alt: 'Capsule guardaroba coordinata nei toni panna, salvia e terracotta',
     duration: 'Circa 60 minuti',
     location: 'In boutique, su appuntamento',
@@ -254,7 +268,7 @@ export const services = [
     kicker: 'Partiamo da ciò che hai',
     summary: 'Porta un capo che ami ma usi poco, oppure inviaci una foto: cercheremo nuovi equilibri con la selezione presente in boutique.',
     detail: 'Un servizio concreto per evitare doppioni e scegliere soltanto ciò che completa davvero il tuo guardaroba.',
-    image: '/images/styling-hands-v2.png',
+    image: '/images/styling-hands-v2.webp',
     alt: 'Tessuti e accessori accostati per creare nuovi abbinamenti',
     duration: 'Circa 30–45 minuti',
     location: 'In boutique; primo confronto anche su WhatsApp',
@@ -274,7 +288,7 @@ export const services = [
     kicker: 'Una direzione chiara',
     summary: 'Facciamo ordine tra necessità, colori e priorità della nuova stagione, così ogni eventuale acquisto ha un ruolo preciso.',
     detail: 'Non è un riordino a domicilio: è un incontro in boutique per tradurre le tue esigenze in una lista semplice e in look concreti.',
-    image: '/images/look-oatmeal-v2.png',
+    image: '/images/look-oatmeal-v2.webp',
     alt: 'Maglieria leggera e gonna midi adatte al passaggio di stagione',
     duration: 'Circa 45–60 minuti',
     location: 'In boutique, su appuntamento',
@@ -300,7 +314,7 @@ export const articles = [
     date: '28 agosto 2026',
     isoDate: '2026-08-28',
     readTime: '6 minuti',
-    image: '/images/capsule-rack-v2.png',
+    image: '/images/capsule-rack-v2.webp',
     alt: 'Una capsule wardrobe coordinata nei toni naturali',
     intro: 'Costruire un guardaroba personale non significa seguire regole rigide. Significa osservare le proprie giornate, capire cosa ci fa sentire a nostro agio e scegliere capi capaci di lavorare insieme.',
     sections: [
@@ -317,7 +331,7 @@ export const articles = [
     date: '20 agosto 2026',
     isoDate: '2026-08-20',
     readTime: '5 minuti',
-    image: '/images/styling-hands-v2.png',
+    image: '/images/styling-hands-v2.webp',
     alt: 'Accostamento di tessuti nei toni salvia, terracotta e crema',
     intro: 'I colori naturali sono facili da amare ma, se usati tutti nello stesso modo, rischiano di diventare piatti. Il segreto è creare differenze di luce, materia e profondità.',
     sections: [
@@ -334,7 +348,7 @@ export const articles = [
     date: '12 agosto 2026',
     isoDate: '2026-08-12',
     readTime: '4 minuti',
-    image: '/images/look-sage-v2.png',
+    image: '/images/look-sage-v2.webp',
     alt: 'Donna con blazer salvia e pantaloni avorio',
     intro: 'Una giacca morbida può accompagnare moltissime giornate. Cambiano ciò che metti sotto, le proporzioni e gli accessori: il capo resta lo stesso, ma l’effetto è ogni volta diverso.',
     sections: [
@@ -352,7 +366,7 @@ export const articles = [
     date: '4 agosto 2026',
     isoDate: '2026-08-04',
     readTime: '5 minuti',
-    image: '/images/look-oatmeal-v2.png',
+    image: '/images/look-oatmeal-v2.webp',
     alt: 'Donna con maglia leggera color avena e gonna rosa polvere',
     intro: 'Le mezze stagioni chiedono flessibilità. Invece di aggiungere strati a caso, conviene pensare a una base leggera, un livello morbido e un capo esterno facile da togliere.',
     sections: [
@@ -369,7 +383,7 @@ export const articles = [
     date: '25 luglio 2026',
     isoDate: '2026-07-25',
     readTime: '4 minuti',
-    image: '/images/accessories-v2.png',
+    image: '/images/accessories-v2.webp',
     alt: 'Accessori coordinati su una superficie chiara',
     intro: 'Gli accessori migliori non chiedono attenzione a tutti i costi. Danno ritmo, collegano i colori e permettono di rinnovare anche i capi più conosciuti.',
     sections: [
@@ -386,7 +400,7 @@ export const articles = [
     date: '16 luglio 2026',
     isoDate: '2026-07-16',
     readTime: '6 minuti',
-    image: '/images/boutique-interior-v2.png',
+    image: '/images/boutique-interior-v2.webp',
     alt: 'Interno caldo e luminoso di una piccola boutique',
     intro: 'La scelta di un capo comincia molto prima della prova. Guardiamo come cade, come si muove, con cosa può essere abbinato e se mantiene il suo carattere nella vita di tutti i giorni.',
     sections: [

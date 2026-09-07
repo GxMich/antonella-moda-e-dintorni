@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import type { Article } from '../content';
-import { assetPath } from '../site';
+import SiteImage from './SiteImage';
 
 export default function ArticleCard({ article, featured = false }: { article: Article; featured?: boolean }) {
   return (
     <article className={featured ? 'article-card is-featured' : 'article-card'}>
       <Link className="article-card-image" href={`/magazine/${article.slug}`}>
-        <img src={assetPath(article.image)} alt={article.alt} loading={featured ? 'eager' : 'lazy'} />
+        <SiteImage src={article.image} alt={article.alt} sizes={featured ? '(max-width: 800px) 100vw, 55vw' : '(max-width: 800px) 100vw, 33vw'} priority={featured} />
       </Link>
       <div className="article-card-copy">
         <p className="article-meta">{article.category} · {article.readTime}</p>

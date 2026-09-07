@@ -1,7 +1,22 @@
 import type { Metadata } from 'next';
+import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import './globals.css';
 import CookieConsent from './components/CookieConsent';
 import { assetUrl, siteUrl } from './site';
+
+const displayFont = Cormorant_Garamond({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
+const bodyFont = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteUrl}/`),
@@ -13,8 +28,8 @@ export const metadata: Metadata = {
   category: 'fashion',
   formatDetection: { telephone: true, email: true, address: true },
   alternates: { canonical: '/' },
-  openGraph: { title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Abbigliamento femminile scelto con cura, consulenza personale e nuove ispirazioni a Vercelli.', url: siteUrl, siteName: 'Antonella Moda e Dintorni', locale: 'it_IT', type: 'website', images: [{ url: assetUrl('/images/atelier-hero.png'), width: 1024, height: 1536, alt: 'Antonella in atelier tra tessuti e capi appesi' }] },
-  twitter: { card: 'summary_large_image', title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Una boutique di prossimità, fatta di ascolto e femminilità.', images: [assetUrl('/images/atelier-hero.png')] },
+  openGraph: { title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Abbigliamento femminile scelto con cura, consulenza personale e nuove ispirazioni a Vercelli.', url: siteUrl, siteName: 'Antonella Moda e Dintorni', locale: 'it_IT', type: 'website', images: [{ url: assetUrl('/images/atelier-hero.webp'), width: 1024, height: 1536, alt: 'Antonella in atelier tra tessuti e capi appesi' }] },
+  twitter: { card: 'summary_large_image', title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Una boutique di prossimità, fatta di ascolto e femminilità.', images: [assetUrl('/images/atelier-hero.webp')] },
 };
 
 const localBusiness = {
@@ -30,5 +45,5 @@ const localBusiness = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="it"><body>{children}<CookieConsent /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} /></body></html>;
+  return <html lang="it" data-scroll-behavior="smooth" className={`${displayFont.variable} ${bodyFont.variable}`}><body>{children}<CookieConsent /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} /></body></html>;
 }

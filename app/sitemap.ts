@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { articles, products, services } from './content';
+import { articles, products, services, type Product } from './content';
 import { siteUrl } from './site';
 
 export const dynamic = 'force-static';
@@ -15,7 +15,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/magazine`, lastModified: new Date(), changeFrequency: 'monthly', priority: .8 },
     { url: `${base}/boutique`, lastModified: new Date(), changeFrequency: 'monthly', priority: .8 },
     { url: `${base}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: .65 },
-    ...products.map(({ slug }) => ({ url: `${base}/capo/${slug}`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: .7 })),
+    ...products.map((product) => {
+      const { slug, updatedAt } = product as Product;
+      return { url: `${base}/capo/${slug}`, lastModified: updatedAt ? new Date(updatedAt) : new Date(), changeFrequency: 'weekly' as const, priority: .7 };
+    }),
     ...services.map(({ slug }) => ({ url: `${base}/servizi/${slug}`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: .72 })),
     ...articles.map(({ slug, isoDate }) => ({ url: `${base}/magazine/${slug}`, lastModified: new Date(isoDate), changeFrequency: 'monthly' as const, priority: .65 })),
   ];

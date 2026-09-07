@@ -13,19 +13,35 @@ export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setVisible(!window.localStorage.getItem(STORAGE_KEY));
-    if (window.location.hash === '#preferenze') setPreferencesOpen(true);
+    const shouldShowBanner = !window.localStorage.getItem(STORAGE_KEY);
+    const shouldOpenPreferences = window.location.hash === '#preferenze';
+    const frame = window.requestAnimationFrame(() => {
+      setVisible(shouldShowBanner);
+      if (shouldOpenPreferences) setPreferencesOpen(true);
+    });
     const onHashChange = () => { if (window.location.hash === '#preferenze') setPreferencesOpen(true); };
     window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    return () => { window.cancelAnimationFrame(frame); window.removeEventListener('hashchange', onHashChange); };
   }, []);
 
   useEffect(() => {
     if (!preferencesOpen) return;
+    previouslyFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     closeButtonRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') { setPreferencesOpen(false); clearPreferenceHash(); } };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setPreferencesOpen(false); clearPreferenceHash(); return; }
+      if (event.key !== 'Tab') return;
+      const panel = closeButtonRef.current?.closest('.cookie-panel');
+      const focusable = panel?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [preferencesOpen]);
@@ -38,7 +54,11 @@ export default function CookieConsent() {
   };
 
   const openPreferences = () => setPreferencesOpen(true);
-  const closePreferences = () => { setPreferencesOpen(false); clearPreferenceHash(); };
+  const closePreferences = () => {
+    setPreferencesOpen(false);
+    clearPreferenceHash();
+    window.requestAnimationFrame(() => previouslyFocusedRef.current?.focus());
+  };
 
   if (!visible && !preferencesOpen) return null;
 

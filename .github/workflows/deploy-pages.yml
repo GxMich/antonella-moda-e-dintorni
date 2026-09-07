@@ -37,6 +37,10 @@ jobs:
         env:
           GITHUB_PAGES: 'true'
           NEXT_PUBLIC_BASE_PATH: /antonella-moda-e-dintorni
+          # Optional repository variables for the final domain or a different
+          # GitHub Pages project path. Leave them unset while using the demo URL.
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          GITHUB_PAGES_BASE_PATH: ${{ vars.GITHUB_PAGES_BASE_PATH }}
         run: npm run build:pages
 
       - name: Upload Pages artifact

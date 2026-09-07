@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCard from '../../components/ArticleCard';
 import InnerHeader from '../../components/InnerHeader';
+import SiteImage from '../../components/SiteImage';
 import SiteFooter from '../../components/SiteFooter';
 import { articles } from '../../content';
-import { assetPath, assetUrl, pageUrl } from '../../site';
+import { assetUrl, pageUrl } from '../../site';
 
 export function generateStaticParams() { return articles.map(({ slug }) => ({ slug })); }
 
@@ -33,7 +34,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     <main className="inner-page article-page">
       <InnerHeader active="magazine" />
       <article>
-        <header className="article-hero"><div className="article-hero-copy"><p className="article-meta">{article.category} · {article.date} · {article.readTime}</p><h1>{article.title}</h1><p>{article.excerpt}</p></div><div className="article-hero-image"><img src={assetPath(article.image)} alt={article.alt} /></div></header>
+        <header className="article-hero"><div className="article-hero-copy"><p className="article-meta">{article.category} · {article.date} · {article.readTime}</p><h1>{article.title}</h1><p>{article.excerpt}</p></div><div className="article-hero-image"><SiteImage src={article.image} alt={article.alt} sizes="(max-width: 800px) 100vw, 50vw" priority /></div></header>
         <div className="article-layout"><aside><span>In questo articolo</span>{article.sections.map((section, index) => <a href={`#sezione-${index + 1}`} key={section.heading}>{String(index + 1).padStart(2, '0')} · {section.heading}</a>)}</aside><div className="article-body"><p className="article-intro">{article.intro}</p>{article.sections.map((section, index) => <section id={`sezione-${index + 1}`} key={section.heading}><span>{String(index + 1).padStart(2, '0')}</span><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</section>)}<div className="article-end"><p>Vuoi trasformare queste idee in abbinamenti adatti a te?</p><Link className="button button-dark" href="/servizi">Scopri la consulenza <span className="arrow">↗</span></Link></div></div></div>
       </article>
       <section className="related-articles section-shell"><div className="section-heading"><div><div className="section-index">Continua a leggere</div><h2>Altri appunti<br /><em>di stile.</em></h2></div><Link className="text-link" href="/magazine">Tutti gli articoli <span className="arrow">↗</span></Link></div><div className="related-article-grid">{related.map((item) => <ArticleCard key={item.slug} article={item} />)}</div></section>

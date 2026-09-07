@@ -6,12 +6,16 @@ import Link from 'next/link';
 type ServiceOption = { slug: string; title: string };
 
 export default function AppointmentForm({ whatsappUrl, serviceOptions, initialService = '' }: { whatsappUrl: string; serviceOptions: readonly ServiceOption[]; initialService?: string }) {
-  const [sent, setSent] = useState(false);
+  const [preparedUrl, setPreparedUrl] = useState<string | null>(null);
+  const [popupBlocked, setPopupBlocked] = useState(false);
   const [selectedService, setSelectedService] = useState(initialService);
 
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get('servizio');
-    if (requested && serviceOptions.some((service) => service.slug === requested)) setSelectedService(requested);
+    const frame = window.requestAnimationFrame(() => {
+      if (requested && serviceOptions.some((service) => service.slug === requested)) setSelectedService(requested);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [serviceOptions]);
 
   function submitRequest(event: FormEvent<HTMLFormElement>) {
@@ -37,8 +41,10 @@ export default function AppointmentForm({ whatsappUrl, serviceOptions, initialSe
       'Attendo la conferma della disponibilità. Grazie!',
     ].filter(Boolean).join('\n');
 
-    window.open(`${whatsappUrl}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
-    setSent(true);
+    const destination = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
+    const popup = window.open(destination, '_blank', 'noopener,noreferrer');
+    setPreparedUrl(destination);
+    setPopupBlocked(!popup);
   }
 
   return (
@@ -53,7 +59,8 @@ export default function AppointmentForm({ whatsappUrl, serviceOptions, initialSe
       </div>
       <label className="privacy-check"><input type="checkbox" required /><span>Ho letto l’<Link href="/privacy">informativa privacy</Link> e acconsento all’invio dei dati tramite WhatsApp. *</span></label>
       <div className="form-submit"><button className="button button-dark" type="submit">Prepara il messaggio <span className="arrow" aria-hidden="true">↗</span></button><p>Il modulo non salva dati: prepara un messaggio che potrai controllare prima di inviare.</p></div>
-      {sent && <p className="form-success" role="status">Il messaggio è pronto su WhatsApp. L’appuntamento sarà valido dopo la conferma della boutique.</p>}
+      {preparedUrl && !popupBlocked && <p className="form-success" role="status">Il messaggio è pronto su WhatsApp. L’appuntamento sarà valido dopo la conferma della boutique.</p>}
+      {preparedUrl && popupBlocked && <p className="form-success" role="alert">Il browser ha bloccato la nuova finestra. <a href={preparedUrl} target="_blank" rel="noreferrer">Apri il messaggio su WhatsApp</a>.</p>}
     </form>
   );
 }

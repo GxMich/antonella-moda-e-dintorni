@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import InnerHeader from '../../components/InnerHeader';
 import ProductCard from '../../components/ProductCard';
+import SiteImage from '../../components/SiteImage';
 import SiteFooter from '../../components/SiteFooter';
-import { business, products } from '../../content';
-import { assetPath, assetUrl } from '../../site';
+import { business, products, type Product } from '../../content';
+import { assetUrl } from '../../site';
 
 export function generateStaticParams() { return products.map(({ slug }) => ({ slug })); }
 
@@ -26,8 +27,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const productIndex = products.findIndex((item) => item.slug === slug);
   if (productIndex < 0) notFound();
-  const product = products[productIndex];
+  const product = products[productIndex] as Product;
   const related = [...products.slice(productIndex + 1), ...products.slice(0, productIndex)].slice(0, 3);
+  const gallery = product.gallery?.length ? product.gallery : [{ src: product.image, alt: product.alt }];
   const message = encodeURIComponent(`Ciao Antonella, vorrei avere informazioni su “${product.name}”.`);
   const productSchema = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, image: assetUrl(product.image), description: product.description, category: product.category, brand: { '@type': 'Brand', name: business.name } };
 
@@ -35,7 +37,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <main className="product-detail-page">
       <InnerHeader active="collezione" />
       <section className="detail-layout">
-        <div className="detail-image"><img src={assetPath(product.image)} alt={product.alt} /></div>
+        <div className={`detail-gallery ${gallery.length > 1 ? 'is-multiple' : ''}`}>
+          {gallery.map((image, index) => <div className="detail-image" key={image.src}><SiteImage src={image.src} alt={image.alt} sizes="(max-width: 800px) 100vw, 55vw" priority={index === 0} /></div>)}
+        </div>
         <div className="detail-copy">
           <span className="section-index">Dettaglio capo</span>
           <p className="eyebrow">{product.category} · {product.badge}</p>

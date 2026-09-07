@@ -64,6 +64,9 @@ public/images/          Immagini della demo
 
 ## Prima della consegna al cliente
 
+Per sostituire contenuti, immagini, dominio e dati senza modificare il design,
+segui [CONTENT_HANDOFF.md](./CONTENT_HANDOFF.md).
+
 I dati commerciali e legali presenti sono una base editoriale di demo. Prima del lancio definitivo vanno confermati con il titolare:
 
 - denominazione legale, codice fiscale o partita IVA;
