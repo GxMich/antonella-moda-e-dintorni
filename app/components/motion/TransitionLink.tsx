@@ -11,7 +11,9 @@ export function resolvePendingTransition() {
   if (!pending) return;
   const resolve = pending;
   pending = null;
-  window.requestAnimationFrame(() => resolve());
+  // Not requestAnimationFrame: rendering is paused while a view transition waits
+  // for its DOM update, so a rAF callback would never run (deadlock until timeout).
+  resolve();
 }
 
 type Props = ComponentProps<typeof Link> & { href: string };
@@ -31,12 +33,15 @@ export default function TransitionLink({ href, onClick, ...props }: Props) {
     const current = window.location.pathname.replace(/\/$/, '');
     if (current.endsWith(href.replace(/\/$/, '')) && href !== '/') return;
     event.preventDefault();
-    document.startViewTransition(() => new Promise<void>((resolve) => {
+    const transition = document.startViewTransition(() => new Promise<void>((resolve) => {
       pending = resolve;
       router.push(href);
       // Never leave the page frozen if the route takes too long.
       window.setTimeout(() => { if (pending === resolve) { pending = null; resolve(); } }, 1200);
     }));
+    // A skipped or interrupted transition is not an error for the visitor.
+    transition.ready.catch(() => {});
+    transition.finished.catch(() => {});
   }
 
   return <Link href={href} onClick={handleClick} {...props} />;

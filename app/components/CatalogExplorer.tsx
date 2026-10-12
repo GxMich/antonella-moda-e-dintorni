@@ -15,7 +15,8 @@ export default function CatalogExplorer({ products }: { products: readonly Produ
     if (next === category) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!('startViewTransition' in document) || reduce) { setCategory(next); return; }
-    document.startViewTransition(() => { flushSync(() => setCategory(next)); });
+    const transition = document.startViewTransition(() => { flushSync(() => setCategory(next)); });
+    transition.finished.catch(() => {});
   }
 
   return (
