@@ -1,49 +1,86 @@
-import type { Metadata } from 'next';
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Bodoni_Moda, Hanken_Grotesk } from 'next/font/google';
 import './globals.css';
 import CookieConsent from './components/CookieConsent';
+import WhatsAppDock from './components/WhatsAppDock';
+import CamerinoDrawer from './components/camerino/CamerinoDrawer';
+import { CamerinoProvider } from './components/camerino/CamerinoProvider';
+import MotionRoot from './components/motion/MotionRoot';
+import { business, openingHours } from './content';
 import { assetUrl, siteUrl } from './site';
 
-const displayFont = Cormorant_Garamond({
+// Bodoni was a Piedmontese typographer (Saluzzo, 1740): the fashion-magazine
+// serif feels at home in a Vercelli boutique.
+const displayFont = Bodoni_Moda({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
   display: 'swap',
 });
 
-const bodyFont = DM_Sans({
+const bodyFont = Hanken_Grotesk({
   subsets: ['latin'],
   variable: '--font-body',
   display: 'swap',
 });
 
+const description = 'Boutique di abbigliamento donna a Vercelli, in Via Carlo III di Savoia 10 angolo Via Dante. Abiti, completi e tailleur scelti da Antonella Mangolini. Scrivi su WhatsApp o prenota una videochiamata.';
+
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteUrl}/`),
-  title: 'Antonella Moda e Dintorni | Boutique a Vercelli',
-  description: 'Scopri Antonella Moda e Dintorni, boutique di abbigliamento femminile a Vercelli. Guarda i nuovi arrivi e contattaci su WhatsApp o in boutique.',
-  applicationName: 'Antonella Moda e Dintorni',
-  keywords: ['boutique Vercelli', 'abbigliamento donna Vercelli', 'moda donna', 'consulenza di stile', 'nuovi arrivi donna'],
-  creator: 'Antonella Moda e Dintorni',
+  title: 'Antonella Moda e Dintorni | Abbigliamento donna a Vercelli',
+  description,
+  applicationName: business.name,
+  keywords: ['abbigliamento donna Vercelli', 'boutique Vercelli', 'negozio vestiti donna Vercelli', 'Artigli Vercelli', 'abiti cerimonia Vercelli', 'tailleur donna', 'Un libro in borsa'],
+  creator: business.name,
   category: 'fashion',
-  formatDetection: { telephone: true, email: true, address: true },
+  formatDetection: { telephone: true, address: true },
   alternates: { canonical: '/' },
-  openGraph: { title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Abbigliamento femminile scelto con cura, consulenza personale e nuove ispirazioni a Vercelli.', url: siteUrl, siteName: 'Antonella Moda e Dintorni', locale: 'it_IT', type: 'website', images: [{ url: assetUrl('/images/atelier-hero.webp'), width: 1024, height: 1536, alt: 'Antonella in atelier tra tessuti e capi appesi' }] },
-  twitter: { card: 'summary_large_image', title: 'Antonella Moda e Dintorni | Boutique a Vercelli', description: 'Una boutique di prossimità, fatta di ascolto e femminilità.', images: [assetUrl('/images/atelier-hero.webp')] },
+  openGraph: {
+    title: 'Antonella Moda e Dintorni, boutique donna a Vercelli',
+    description: 'Siate icone di voi stesse. Abbigliamento donna scelto da Antonella, in Via Carlo III di Savoia 10 a Vercelli.',
+    url: siteUrl,
+    siteName: business.name,
+    locale: 'it_IT',
+    type: 'website',
+    images: [{ url: assetUrl('/images/boutique/antonella-armadio-rosa.webp'), width: 800, height: 1000, alt: 'Antonella nella sua boutique davanti all’armadio rosa' }],
+  },
+  twitter: { card: 'summary_large_image', title: 'Antonella Moda e Dintorni', description, images: [assetUrl('/images/boutique/antonella-armadio-rosa.webp')] },
 };
 
+export const viewport: Viewport = { themeColor: '#ffffff' };
+
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 const localBusiness = {
-  '@context': 'https://schema.org', '@type': 'ClothingStore', name: 'Antonella Moda e Dintorni', url: siteUrl, telephone: '+39 3318115966', email: 'info@antonellamodaedintorni.com',
-  address: { '@type': 'PostalAddress', streetAddress: 'Via Carlo III di Savoia, Via Dante Alighieri, 10', postalCode: '13100', addressLocality: 'Vercelli', addressRegion: 'VC', addressCountry: 'IT' },
-  openingHoursSpecification: [
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday', opens: '16:00', closes: '19:30' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '12:30' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '16:00', closes: '19:30' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '10:00', closes: '12:30' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '16:00', closes: '19:30' },
-  ],
+  '@context': 'https://schema.org',
+  '@type': 'ClothingStore',
+  name: business.name,
+  url: siteUrl,
+  image: assetUrl('/images/boutique/antonella-armadio-rosa.webp'),
+  logo: assetUrl('/images/brand/logo.png'),
+  telephone: business.phoneHref,
+  vatID: `IT${business.vatNumber}`,
+  founder: { '@type': 'Person', name: business.owner },
+  address: { '@type': 'PostalAddress', streetAddress: business.street, postalCode: business.postalCode, addressLocality: business.city, addressRegion: business.province, addressCountry: 'IT' },
+  openingHoursSpecification: openingHours.flatMap(({ dayIndex, slots }) => slots.map(([opens, closes]) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: dayNames[dayIndex], opens, closes }))),
+  sameAs: business.socials.map((social) => social.href),
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="it" data-scroll-behavior="smooth" className={`${displayFont.variable} ${bodyFont.variable}`}><body>{children}<CookieConsent /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} /></body></html>;
+  return (
+    <html lang="it" data-scroll-behavior="smooth" className={`${displayFont.variable} ${bodyFont.variable}`}>
+      <body>
+        <a className="skip-link" href="#contenuto">Vai al contenuto</a>
+        <CamerinoProvider>
+          {children}
+          <WhatsAppDock />
+          <CamerinoDrawer />
+        </CamerinoProvider>
+        <MotionRoot />
+        <CookieConsent />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} />
+      </body>
+    </html>
+  );
 }

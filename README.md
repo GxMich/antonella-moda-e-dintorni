@@ -1,30 +1,55 @@
 # Antonella Moda e Dintorni
 
-Sito vetrina completo per una boutique indipendente di abbigliamento femminile a Vercelli. Il progetto è pensato come demo commerciale realistica e come base pronta da personalizzare prima della consegna definitiva al cliente.
+Sito vetrina della boutique di abbigliamento donna di Antonella Mangolini a Vercelli
+(Via Carlo III di Savoia 10, angolo Via Dante).
 
 **Sito online:** [gxmich.github.io/antonella-moda-e-dintorni](https://gxmich.github.io/antonella-moda-e-dintorni/)
 
 ## Cosa contiene
 
-- Homepage editoriale e responsive
-- Catalogo con otto proposte, ricerca e filtri per categoria
-- Schede dettagliate dei capi
-- Otto servizi con pagina dedicata e percorso spiegato
-- Richiesta appuntamento che prepara un messaggio WhatsApp senza salvare dati sul sito
-- Magazine con sei articoli completi e relative pagine
-- Pagine Chi siamo, Boutique, orari, contatti e FAQ
-- Privacy Policy, Cookie Policy, Termini di utilizzo e Accessibilità
-- Banner e centro preferenze cookie
-- Metadata SEO, Open Graph, dati strutturati, sitemap e robots.txt
-- Immagini originali create per la demo e servite localmente
+- Homepage con i capi visti in boutique, la storia di Antonella, i servizi a distanza,
+  il gruppo di lettura “Un libro in borsa”, le recensioni e gli orari con stato
+  “aperto ora / chiuso” calcolato sull’ora italiana
+- Collezione con 15 capi reali fotografati in boutique (molti della collezione Artigli),
+  filtri per categoria e una scheda per ogni capo
+- Servizi: shopping in videochiamata WhatsApp, foto e consigli su WhatsApp, consulenza
+  in boutique, abiti per cerimonie, buono regalo
+- Chi siamo con il testo originale di Antonella e il video della boutique
+- Diario con i suoi articoli (tubino nero, tailleur, jeans)
+- Dove siamo, domande frequenti, prenotazione che prepara un messaggio WhatsApp
+- Privacy, Cookie, Termini, Accessibilità; dati strutturati (ClothingStore, Product,
+  Event, FAQPage, BlogPosting), sitemap e robots.txt
 
-## Tecnologie
+## Da dove vengono i contenuti
 
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Esportazione statica e deploy automatico su GitHub Pages
-- CSS responsive personalizzato, senza librerie UI esterne
+Testi, foto, logo e video provengono dal vecchio negozio online
+antonellamodaedintorni.com (dominio scaduto, recuperato dall’archivio pubblico), dalle
+recensioni Trustpilot, dagli articoli di Prima Vercelli sugli incontri di “Un libro in
+borsa” e dai profili social della boutique. L’uso è stato autorizzato dalla titolare.
+Non sono indicati prezzi né disponibilità: cambiano ogni settimana e vengono confermati
+su WhatsApp.
+
+## Identità visiva
+
+Presa dalla boutique vera: pareti bianche, il nero del logo, il fucsia della scritta
+“moda e dintorni” e dei mobili laccati del negozio. La cornice fucsia attorno alle foto
+principali richiama l’armadio dalla cornice rosa del negozio. Titoli in Bodoni Moda
+(Bodoni era piemontese), testo in Hanken Grotesk.
+
+## Interazioni e animazioni
+
+- **Il tuo camerino**: chi visita mette i capi nel camerino (con la taglia), sceglie
+  giorno e fascia oraria tra gli orari reali di apertura e invia la lista ad Antonella su
+  WhatsApp. I dati restano solo nel browser (`localStorage`, chiave
+  `antonella-camerino-v1`). Codice in `app/components/camerino/`.
+- **Entra in boutique** (homepage): scorrendo, la cornice fucsia si apre fino a mostrare
+  l’interno del negozio, poi compaiono indirizzo e stato “aperto ora”.
+- **Lo stender**: “Visti in boutique” è uno stender con binario e grucce; su desktop la
+  sezione si blocca e lo scroll fa scorrere i capi di lato, che oscillano con la velocità.
+- Transizioni di pagina con la View Transitions API (la foto del capo passa dalla card
+  alla scheda), filtri della collezione animati, scroll morbido con Lenis su desktop.
+- Tutto rispetta `prefers-reduced-motion`; senza JavaScript i contenuti restano visibili.
+  Librerie: GSAP + ScrollTrigger, Lenis. Codice in `app/components/motion/`.
 
 ## Avvio locale
 
@@ -35,49 +60,35 @@ npm install
 npm run dev
 ```
 
-Il sito sarà disponibile all’indirizzo indicato dal terminale. Per una build di produzione:
+Controlli prima di pubblicare:
 
 ```bash
-npm run build
-```
-
-Ogni push sul branch `main` avvia il workflow in `.github/workflows/deploy-pages.yml`, genera l’esportazione statica e aggiorna GitHub Pages.
-
-Per il controllo dei tipi:
-
-```bash
+npm run lint
 npx tsc --noEmit
+npm run build:pages
 ```
 
-## Struttura principale
+Ogni push sul branch `main` avvia `.github/workflows/deploy-pages.yml`, che genera
+l’esportazione statica e aggiorna GitHub Pages.
+
+> Su Windows con Git Bash, per provare la build con il percorso di GitHub Pages usa
+> `MSYS_NO_PATHCONV=1`, altrimenti Git Bash trasforma `/antonella-moda-e-dintorni` in un
+> percorso di Windows e le immagini non si caricano.
+
+## Struttura
 
 ```text
 app/
-  capo/[slug]/          Schede prodotto
-  servizi/[slug]/       Schede servizio
-  magazine/[slug]/      Articoli completi
-  appuntamento/         Modulo WhatsApp
-  components/           Componenti condivisi e interattivi
-  content.ts            Contenuti centralizzati
-public/images/          Immagini della demo
+  content.ts              Tutti i dati: boutique, orari, capi, servizi, eventi, articoli
+  capo/[slug]/            Scheda capo
+  servizi/[slug]/         Scheda servizio
+  diario/[slug]/          Articoli di Antonella
+  un-libro-in-borsa/      Gruppo di lettura ed eventi
+  components/             Header, footer, card, filtri, orari, modulo WhatsApp
+public/images/capi/       Foto dei capi (WebP)
+public/images/boutique/   Foto di Antonella e del negozio
+public/images/brand/      Logo, buono regalo
+public/video/             Video della boutique (compresso, 9,7 MB)
 ```
 
-## Prima della consegna al cliente
-
-Per sostituire contenuti, immagini, dominio e dati senza modificare il design,
-segui [CONTENT_HANDOFF.md](./CONTENT_HANDOFF.md).
-
-I dati commerciali e legali presenti sono una base editoriale di demo. Prima del lancio definitivo vanno confermati con il titolare:
-
-- denominazione legale, codice fiscale o partita IVA;
-- indirizzo, telefono, email e orari;
-- prezzi, disponibilità, taglie e composizioni reali;
-- fornitore di hosting e tempi di conservazione;
-- testo definitivo delle informative legali;
-- dominio ufficiale e profili social.
-
-Le immagini dei capi e gli articoli attuali sono rappresentativi e possono essere sostituiti modificando `app/content.ts` e i file in `public/images`.
-
-## Licenza
-
-Progetto dimostrativo. Tutti i diritti sui contenuti, sul design e sulle immagini sono riservati, salvo accordi diversi con il titolare del progetto.
+Per aggiornare i contenuti segui [CONTENT_HANDOFF.md](./CONTENT_HANDOFF.md).

@@ -1,424 +1,476 @@
+/**
+ * Every fact in this file comes from a public source about the boutique:
+ * the former online shop antonellamodaedintorni.com (archived 2024–2025),
+ * Trustpilot, Prima Vercelli and the boutique's social profiles.
+ * When something changes, update it here: header, footer, pages and JSON-LD
+ * all read from this single file.
+ */
+
 export const business = {
   name: 'Antonella Moda e Dintorni',
-  shortName: 'Antonella',
-  phoneDisplay: '+39 331 811 5966',
+  owner: 'Antonella Mangolini',
+  phoneDisplay: '331 811 5966',
   phoneHref: '+393318115966',
-  email: 'info@antonellamodaedintorni.com',
-  addressLines: ['Via Carlo III di Savoia,', 'Via Dante Alighieri, 10', '13100 Vercelli VC'],
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Via+Dante+Alighieri+10+Vercelli',
   whatsappUrl: 'https://wa.me/393318115966',
+  street: 'Via Carlo III di Savoia, 10',
+  corner: 'angolo Via Dante',
+  postalCode: '13100',
+  city: 'Vercelli',
+  province: 'VC',
+  addressLines: ['Via Carlo III di Savoia, 10', 'angolo Via Dante', '13100 Vercelli (VC)'],
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Via+Carlo+III+di+Savoia+10+13100+Vercelli',
+  vatNumber: '02545230027',
+  motto: '#siateiconedivoistesse',
+  socials: [
+    { label: 'Instagram', href: 'https://www.instagram.com/antonellamodaedintorni/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/antonellamodaedintorni' },
+    { label: 'TikTok', href: 'https://www.tiktok.com/@antonellamodaedintorni' },
+    { label: 'YouTube', href: 'https://www.youtube.com/@antonellamodaedintorni588' },
+  ],
+} as const;
+
+export function whatsappLink(message: string) {
+  return `${business.whatsappUrl}?text=${encodeURIComponent(message)}`;
+}
+
+/** Day index follows Date.getDay(): 0 is Sunday. Times are 24h "HH:MM". */
+export const openingHours: readonly { day: string; dayIndex: number; slots: readonly (readonly [string, string])[] }[] = [
+  { day: 'Lunedì', dayIndex: 1, slots: [['16:00', '19:30']] },
+  { day: 'Martedì', dayIndex: 2, slots: [['09:00', '12:30'], ['16:00', '19:30']] },
+  { day: 'Mercoledì', dayIndex: 3, slots: [['09:00', '12:30'], ['16:00', '19:30']] },
+  { day: 'Giovedì', dayIndex: 4, slots: [['09:00', '12:30'], ['16:00', '19:30']] },
+  { day: 'Venerdì', dayIndex: 5, slots: [['09:00', '12:30'], ['16:00', '19:30']] },
+  { day: 'Sabato', dayIndex: 6, slots: [['10:00', '12:30'], ['16:00', '19:30']] },
+  { day: 'Domenica', dayIndex: 0, slots: [] },
+];
+
+export type ProductImage = { src: string; alt: string };
+
+export type Product = {
+  slug: string;
+  name: string;
+  brand?: string;
+  category: 'Abiti' | 'Completi' | 'Capispalla' | 'Bluse' | 'Gonne';
+  colors: string;
+  description: string;
+  details: readonly string[];
+  images: readonly ProductImage[];
+  /** ISO date, used by the sitemap. */
+  updatedAt: string;
 };
 
-export const products = [
-  {
-    slug: 'morbida-presenza',
-    name: 'Morbida presenza',
-    category: 'Abito',
-    badge: 'Nuovo arrivo',
-    image: '/images/look-terracotta-v2.webp',
-    alt: 'Donna adulta con abito midi color terracotta e cardigan panna',
-    description: 'Un abito fluido che accompagna il movimento e lascia spazio alla persona, dal mattino alla sera.',
-    story: 'Il color terracotta scalda il viso e si abbina con naturalezza ai toni panna, cuoio e verde oliva. La linea morbida valorizza senza costringere.',
-    details: ['Linea midi fluida', 'Cardigan coordinabile', 'Cintura removibile', 'Tessuto leggero e morbido'],
-    sizes: 'Taglie indicative: S–XL',
-    colors: 'Terracotta · panna',
-    fit: 'Vestibilità regolare e confortevole',
-  },
-  {
-    slug: 'linea-quotidiana',
-    name: 'Linea quotidiana',
-    category: 'Completo',
-    badge: 'Versatile',
-    image: '/images/look-sage-v2.webp',
-    alt: 'Donna adulta con blazer verde salvia e pantaloni ampi color avorio',
-    description: 'Un completo luminoso da interpretare ogni giorno, con una giacca destrutturata e un pantalone ampio.',
-    story: 'La giacca salvia è il punto di equilibrio tra eleganza e semplicità. Indossata con l’avorio rende il completo fresco, ma funziona anche con denim e nero.',
-    details: ['Blazer morbido', 'Pantalone a gamba ampia', 'Top avorio', 'Capi indossabili separatamente'],
-    sizes: 'Taglie indicative: 40–48',
-    colors: 'Salvia · avorio',
-    fit: 'Giacca morbida, pantalone regolare',
-  },
-  {
-    slug: 'luce-quieta',
-    name: 'Luce quieta',
-    category: 'Maglieria',
-    badge: 'Essenziale',
-    image: '/images/look-oatmeal-v2.webp',
-    alt: 'Donna adulta con maglia color avena e gonna midi rosa polvere',
-    description: 'Una maglia soffice e una gonna polvere per vestirsi con delicatezza, senza rinunciare al carattere.',
-    story: 'Le texture morbide rendono il look accogliente e facile da portare. La gonna satinata aggiunge luce e movimento anche alle giornate più semplici.',
-    details: ['Maglia dalla linea rilassata', 'Gonna midi fluida', 'Palette neutra', 'Facile da sovrapporre'],
-    sizes: 'Taglie indicative: S–XXL',
-    colors: 'Avena · rosa polvere',
-    fit: 'Maglia over, gonna regolare',
-  },
-  {
-    slug: 'tono-di-casa',
-    name: 'Tono di casa',
-    category: 'Giacca',
-    badge: 'Icona quotidiana',
-    image: '/images/look-ink-v2.webp',
-    alt: 'Donna adulta con giacca antracite, top cipria e pantaloni scuri',
-    description: 'Una giacca dal taglio pulito che dà struttura al guardaroba mantenendo un’attitudine naturale.',
-    story: 'Il tono antracite rende la giacca facile da usare e il top cipria ne addolcisce il carattere. Una base affidabile per lavoro, cena e tempo libero.',
-    details: ['Taglio morbido', 'Chiusura essenziale', 'Pantalone fluido', 'Top luminoso'],
-    sizes: 'Taglie indicative: 40–50',
-    colors: 'Antracite · cipria · nero',
-    fit: 'Regolare, leggermente destrutturata',
-  },
-  {
-    slug: 'piccoli-segni',
-    name: 'Piccoli segni',
-    category: 'Accessori',
-    badge: 'Idee regalo',
-    image: '/images/accessories-v2.webp',
-    alt: 'Borsa color cuoio, foulard botanico e piccoli orecchini su tessuti neutri',
-    description: 'Accessori scelti per completare un look con misura: una borsa, un foulard e un punto di luce.',
-    story: 'Un accessorio ben scelto cambia il ritmo di ciò che già possiedi. La palette botanica dialoga con beige, denim, verde, panna e terracotta.',
-    details: ['Borsa a spalla', 'Foulard fantasia botanica', 'Orecchini dorati', 'Maglieria salvia'],
-    sizes: 'Taglia unica',
-    colors: 'Cuoio · salvia · botanico',
-    fit: 'Accessori coordinabili singolarmente',
-  },
-  {
-    slug: 'guardaroba-essenziale',
-    name: 'Guardaroba essenziale',
-    category: 'Selezione',
-    badge: 'Capsule',
-    image: '/images/capsule-rack-v2.webp',
-    alt: 'Capsule wardrobe con camicia panna, giacca salvia, gonna terracotta, maglia e pantaloni scuri',
-    description: 'Cinque capi, molte combinazioni: una piccola base pensata per semplificare le scelte quotidiane.',
-    story: 'La capsule unisce colori che si parlano e volumi facili da sovrapporre. Il risultato è un guardaroba compatto, personale e realmente utilizzabile.',
-    details: ['Camicia chiara', 'Giacca salvia', 'Gonna terracotta', 'Maglia neutra', 'Pantalone scuro'],
-    sizes: 'Componibile secondo disponibilità',
-    colors: 'Panna · salvia · terracotta · antracite',
-    fit: 'Selezione personalizzabile in boutique',
-  },
-  {
-    slug: 'oliva-in-movimento',
-    name: 'Oliva in movimento',
-    category: 'Giacca e gonna',
-    badge: 'Scelto da Antonella',
-    image: '/images/atelier-hero.webp',
-    alt: 'Donna in boutique con giacca verde oliva e gonna color terracotta',
-    description: 'Due toni naturali, una silhouette morbida e una combinazione che attraversa più stagioni.',
-    story: 'Oliva e terracotta costruiscono un look caldo ma non prevedibile. La camicia chiara porta luce e permette di alleggerire l’insieme.',
-    details: ['Giacca oliva', 'Camicia chiara', 'Gonna midi', 'Palette di transizione'],
-    sizes: 'Taglie indicative: 40–48',
-    colors: 'Oliva · terracotta · panna',
-    fit: 'Morbida e stratificabile',
-  },
-  {
-    slug: 'trama-botanica',
-    name: 'Trama botanica',
-    category: 'Foulard',
-    badge: 'Dettaglio',
-    image: '/images/styling-hands-v2.webp',
-    alt: 'Mani che accostano tessuti e foulard nei toni salvia e terracotta',
-    description: 'Una stampa botanica da annodare al collo, alla borsa o tra i capelli per dare nuova voce ai capi essenziali.',
-    story: 'Il foulard riprende i colori della collezione e diventa un piccolo strumento di styling: basta cambiare nodo per cambiare intenzione.',
-    details: ['Fantasia botanica', 'Mano morbida', 'Formato versatile', 'Idea regalo'],
-    sizes: 'Taglia unica',
-    colors: 'Salvia · terracotta · crema',
-    fit: 'Accessorio multiuso',
-  },
-] as const;
+const img = (slug: string, count: number, label: string): ProductImage[] =>
+  Array.from({ length: count }, (_, index) => ({
+    src: `/images/capi/${slug}-${index + 1}.webp`,
+    alt: index === 0 ? `${label}, indossato in boutique` : `${label}, altra vista`,
+  }));
 
-export type ProductImage = {
-  src: string;
+export const products: readonly Product[] = [
+  {
+    slug: 'tubino-nero-midi',
+    name: 'Tubino nero midi',
+    brand: 'Artigli',
+    category: 'Abiti',
+    colors: 'Nero',
+    description: 'Il tubino che Antonella indossa «per ogni occasione importante, e anche per il lavoro»: scollo squadrato, spalline larghe, linea asciutta.',
+    details: ['Scollo squadrato', 'Spalline larghe', 'Linea aderente', 'Da rendere più easy con gli accessori'],
+    images: img('tubino-nero-midi', 2, 'Tubino nero midi Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'abito-viola-alette-bottoni',
+    name: 'Abito con alette e bottoni',
+    brand: 'Artigli',
+    category: 'Abiti',
+    colors: 'Viola',
+    description: 'Un tubino smanicato color viola, con alette e bottoni gioiello in vita che disegnano la figura.',
+    details: ['Smanicato', 'Alette con bottoni in vita', 'Spacco posteriore', 'Lunghezza al ginocchio'],
+    images: img('abito-viola-alette-bottoni', 3, 'Abito viola con alette e bottoni Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'abito-lurex-monospalla',
+    name: 'Abito lungo in lurex monospalla',
+    brand: 'Artigli',
+    category: 'Abiti',
+    colors: 'Champagne',
+    description: 'Lungo, luminoso, con una sola manica e lo spacco laterale: un abito da sera che si muove con te.',
+    details: ['Tessuto lurex', 'Monospalla con una manica lunga', 'Spacco laterale', 'Lunghezza a terra'],
+    images: img('abito-lurex-monospalla', 3, 'Abito lungo in lurex monospalla Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'abito-lungo-raso',
+    name: 'Abito lungo in raso',
+    brand: 'Artigli',
+    category: 'Abiti',
+    colors: 'Ocra dorato',
+    description: 'Raso color ocra, scollo a V e gonna ampia fino a terra. Per una cerimonia, una cena, un’occasione da ricordare.',
+    details: ['Raso', 'Scollo a V', 'Smanicato', 'Gonna lunga e ampia'],
+    images: img('abito-lungo-raso', 2, 'Abito lungo in raso color ocra Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'abito-floreale',
+    name: 'Abito floreale',
+    brand: 'Artigli',
+    category: 'Abiti',
+    colors: 'Panna con stampa botanica',
+    description: 'Stampa botanica su fondo panna, maniche lunghe e linea morbida: da portare da solo o sopra un pantalone.',
+    details: ['Stampa floreale', 'Maniche lunghe svasate', 'Scollo a V', 'Linea morbida'],
+    images: img('abito-floreale', 3, 'Abito floreale Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'blusa-floreale',
+    name: 'Blusa floreale',
+    brand: 'Artigli',
+    category: 'Bluse',
+    colors: 'Rosa cipria con fiori bordeaux e verdi',
+    description: 'Una blusa leggera a fiori su fondo cipria: in boutique l’abbiamo abbinata a un pantalone verde bosco.',
+    details: ['Fantasia floreale', 'Maniche lunghe', 'Scollo tondo', 'Si porta dentro o fuori dal pantalone'],
+    images: img('blusa-floreale', 2, 'Blusa floreale Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-bronzo',
+    name: 'Completo color bronzo',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Bronzo',
+    description: 'Giacca e pantalone dello stesso tono caldo, quasi metallico. Insieme è un tailleur; separati vanno con tutto.',
+    details: ['Giacca doppiopetto', 'Pantalone a sigaretta', 'Tono su tono', 'Capi indossabili anche separati'],
+    images: img('completo-bronzo', 3, 'Completo giacca e pantalone color bronzo Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-bianco-quattro-bottoni',
+    name: 'Completo bianco a quattro bottoni',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Bianco latte',
+    description: 'Giacca doppiopetto con quattro bottoni dorati e pantalone coordinato: il tailleur chiaro che illumina.',
+    details: ['Giacca doppiopetto', 'Quattro bottoni dorati', 'Pantalone a gamba ampia', 'Tasche con pattina'],
+    images: img('completo-bianco-quattro-bottoni', 2, 'Completo bianco con giacca a quattro bottoni Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-panna-due-bottoni',
+    name: 'Completo panna a due bottoni',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Panna',
+    description: 'Giacca monopetto a due bottoni e pantalone slim, in un panna morbido. Elegante senza sforzo.',
+    details: ['Giacca monopetto', 'Due bottoni', 'Pantalone slim', 'Revers classico'],
+    images: img('completo-panna-due-bottoni', 3, 'Completo panna con giacca a due bottoni Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-ilaria-nero',
+    name: 'Completo Ilaria con bottoni',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Nero',
+    description: 'Il tailleur nero con bottoni dorati in rilievo. Antonella dice di averne «almeno una dozzina, quasi tutti neri»: c’è un motivo.',
+    details: ['Giacca doppiopetto', 'Bottoni dorati in rilievo', 'Pantalone coordinato', 'Taglio sciancrato'],
+    images: img('completo-ilaria-nero', 2, 'Completo nero Ilaria con bottoni dorati Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-gessato',
+    name: 'Completo gessato',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Grigio antracite gessato',
+    description: 'Gessato grigio, giacca doppiopetto e pantalone dritto: il classico maschile, portato da una donna.',
+    details: ['Tessuto gessato', 'Giacca doppiopetto', 'Pantalone dritto'],
+    images: img('completo-gessato', 2, 'Completo gessato grigio Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'completo-magenta',
+    name: 'Completo magenta',
+    brand: 'Artigli',
+    category: 'Completi',
+    colors: 'Magenta prugna',
+    description: 'Giacca sciancrata e pantalone a zampa nello stesso magenta intenso. Per chi vuole farsi notare con eleganza.',
+    details: ['Giacca a un bottone', 'Pantalone a zampa', 'Tasche con pattina', 'Colore pieno'],
+    images: img('completo-magenta', 3, 'Completo magenta giacca e pantalone Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'cappotto-rosso-doppiopetto',
+    name: 'Cappotto rosso doppiopetto',
+    brand: 'Artigli',
+    category: 'Capispalla',
+    colors: 'Rosso',
+    description: 'Rosso pieno, doppiopetto, con pieghe che danno movimento. Un cappotto che fa il look da solo.',
+    details: ['Doppiopetto', 'Pieghe eleganti', 'Bottoni dorati', 'Lunghezza al ginocchio'],
+    images: img('cappotto-rosso-doppiopetto', 2, 'Cappotto rosso doppiopetto Artigli'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'giacca-frange-ecopelle',
+    name: 'Giacca con frange in ecopelle',
+    category: 'Capispalla',
+    colors: 'Nero',
+    description: 'Ecopelle nera e frange lunghe che si muovono a ogni passo. Sopra un abito, cambia subito il carattere del look.',
+    details: ['Ecopelle', 'Frange lunghe', 'Linea corta'],
+    images: img('giacca-frange-ecopelle', 2, 'Giacca nera con frange in ecopelle'),
+    updatedAt: '2025-07-15',
+  },
+  {
+    slug: 'gonna-fiori-maculata',
+    name: 'Gonna a fiori e maculato',
+    brand: 'Artigli',
+    category: 'Gonne',
+    colors: 'Rose rosse su fondo animalier',
+    description: 'Rose rosse su base maculata: una gonna lunga che non chiede permesso. In boutique l’abbiamo provata con un blazer nero.',
+    details: ['Fantasia rose e animalier', 'Lunghezza maxi', 'Vita alta'],
+    images: img('gonna-fiori-maculata', 2, 'Gonna lunga a fiori su fondo maculato Artigli'),
+    updatedAt: '2025-07-15',
+  },
+];
+
+export const categories = ['Abiti', 'Completi', 'Capispalla', 'Bluse', 'Gonne'] as const;
+
+export type Service = {
+  slug: string;
+  title: string;
+  summary: string;
+  body: readonly string[];
+  steps: readonly { title: string; text: string }[];
+  image: string;
   alt: string;
+  cta: string;
+  message: string;
 };
 
-export type Product = (typeof products)[number] & {
-  /**
-   * Optional now, so the sample catalog stays compact. Add two to four real
-   * images here when a garment is ready to publish; the detail page will turn
-   * them into a gallery without any code change.
-   */
-  gallery?: readonly ProductImage[];
-  /** ISO date used for the sitemap when real products are published. */
-  updatedAt?: string;
+export const services: readonly Service[] = [
+  {
+    slug: 'shopping-in-videochiamata',
+    title: 'Shopping in videochiamata',
+    summary: 'Scrivi giorno e ora: Antonella ti chiama su WhatsApp e ti mostra i capi in diretta, dal negozio.',
+    body: [
+      'È il modo più vicino a entrare in boutique senza muoverti da casa. Vedi i capi in tempo reale, chiedi di avvicinare un tessuto, di mostrare il retro di una giacca o di provare un abbinamento.',
+      'Antonella ti dà consigli di stile come farebbe al banco, con la stessa sincerità: se un capo non è quello giusto per te, te lo dice.',
+    ],
+    steps: [
+      { title: 'Scrivi su WhatsApp', text: 'Indica giorno e ora in cui vuoi essere chiamata e, se vuoi, cosa stai cercando.' },
+      { title: 'Ricevi la chiamata', text: 'All’ora concordata Antonella ti videochiama dal negozio.' },
+      { title: 'Scegli con calma', text: 'Ti fai mettere da parte quello che ti piace, oppure passi a provarlo.' },
+    ],
+    image: '/images/boutique/interno-stender.webp',
+    alt: 'Stender con giacche e camicie colorate all’interno della boutique',
+    cta: 'Prenota la videochiamata',
+    message: 'Ciao Antonella, vorrei prenotare una videochiamata per vedere i capi. Sarei libera il giorno … alle ore …',
+  },
+  {
+    slug: 'consigli-su-whatsapp',
+    title: 'Foto e consigli su WhatsApp',
+    summary: 'Hai visto un capo qui o sui social? Mandaci il nome o uno screenshot: ti rispondiamo con foto, taglie e abbinamenti.',
+    body: [
+      'Negli orari di negozio rispondiamo di solito entro pochi minuti. Puoi chiedere una taglia, un colore, una foto del retro o un consiglio su cosa metterci sotto.',
+      'Se il capo ti convince, possiamo metterlo da parte per qualche giorno così passi a provarlo.',
+    ],
+    steps: [
+      { title: 'Mandaci il capo', text: 'Il nome che trovi sul sito, uno screenshot da Instagram o una foto.' },
+      { title: 'Ti rispondiamo', text: 'Foto reali, taglie disponibili e idee per abbinarlo.' },
+      { title: 'Lo mettiamo da parte', text: 'Se ti piace, te lo teniamo e lo provi quando passi.' },
+    ],
+    image: '/images/boutique/stender-neri.webp',
+    alt: 'Capi neri, borse e accessori esposti in boutique',
+    cta: 'Scrivi su WhatsApp',
+    message: 'Ciao Antonella, vorrei qualche informazione su un capo che ho visto.',
+  },
+  {
+    slug: 'consulenza-in-boutique',
+    title: 'Consulenza in boutique',
+    summary: 'Più di 35 anni di esperienza a tua disposizione: vieni, racconta cosa cerchi e prova senza fretta.',
+    body: [
+      'Non serve appuntamento per entrare. Se però hai un’occasione precisa, una cerimonia o un guardaroba da rinnovare, avvisaci prima: prepariamo una selezione di capi nelle tue taglie.',
+      'Lavoriamo su versatilità e femminilità, con un’attenzione particolare al prezzo.',
+    ],
+    steps: [
+      { title: 'Raccontaci l’occasione', text: 'Un evento, il lavoro, un cambio di stagione o solo la voglia di qualcosa di nuovo.' },
+      { title: 'Prepariamo la selezione', text: 'Capi, colori e taglie pensati per te, pronti quando arrivi.' },
+      { title: 'Provi con calma', text: 'Abbinamenti, alternative e un parere sincero.' },
+    ],
+    image: '/images/boutique/antonella-maglia-bianca.webp',
+    alt: 'Antonella in boutique con maglia bianca traforata e gonna nera',
+    cta: 'Chiedi un appuntamento',
+    message: 'Ciao Antonella, vorrei venire in boutique per una consulenza. Cerco …',
+  },
+  {
+    slug: 'outfit-per-cerimonie',
+    title: 'Abiti per cerimonie ed eventi',
+    summary: 'Abiti lunghi in raso e lurex, completi e tailleur: troviamo insieme il look per il tuo giorno importante.',
+    body: [
+      'Matrimoni, comunioni, lauree, cene di gala. Partiamo da dove si svolge l’evento, dall’orario e da come vuoi sentirti, poi costruiamo il look completo di accessori.',
+      'Ti aiutiamo anche a pensare a dopo: un buon abito da cerimonia, con gli accessori giusti, si porta di nuovo.',
+    ],
+    steps: [
+      { title: 'Dicci l’evento', text: 'Tipo di cerimonia, data, luogo e dress code se c’è.' },
+      { title: 'Scegliamo il protagonista', text: 'Abito lungo, completo o tailleur, nelle tue taglie.' },
+      { title: 'Completiamo il look', text: 'Borsa, gioielli e dettagli per chiudere l’insieme.' },
+    ],
+    image: '/images/capi/abito-lungo-raso-1.webp',
+    alt: 'Abito lungo in raso color ocra indossato in boutique',
+    cta: 'Raccontaci l’evento',
+    message: 'Ciao Antonella, cerco un look per una cerimonia il giorno …',
+  },
+  {
+    slug: 'buono-regalo',
+    title: 'Buono regalo',
+    summary: 'Da 15 a 250 €: lasci scegliere a lei, con i consigli di Antonella.',
+    body: [
+      'Quando non conosci la taglia o vuoi lasciare libertà di scelta, il buono regalo è la soluzione più semplice. Puoi scegliere l’importo tra 15 e 250 €.',
+      'Chi lo riceve lo usa in boutique e si fa consigliare da Antonella.',
+    ],
+    steps: [
+      { title: 'Scegli l’importo', text: 'Da 15 a 250 €.' },
+      { title: 'Lo prepariamo', text: 'Passi a ritirarlo oppure ci accordiamo su WhatsApp.' },
+      { title: 'Lei sceglie', text: 'In boutique, con tutto il tempo che vuole.' },
+    ],
+    image: '/images/brand/buono-regalo.webp',
+    alt: 'Una donna sorridente tiene in mano un buono regalo con fiocco rosso',
+    cta: 'Chiedi un buono regalo',
+    message: 'Ciao Antonella, vorrei un buono regalo da … €.',
+  },
+];
+
+export type BookEvent = {
+  date: string;
+  isoDate: string;
+  author: string;
+  book: string;
+  note: string;
 };
 
-export const services = [
+/** Public events reported by Prima Vercelli. */
+export const bookEvents: readonly BookEvent[] = [
   {
-    slug: 'consulenza-personale',
-    number: '01',
-    title: 'Consulenza personale',
-    kicker: 'Stile e vestibilità',
-    summary: 'Un momento dedicato per capire cosa cerchi, quali proporzioni ti fanno sentire bene e come inserire un nuovo capo nel guardaroba che possiedi già.',
-    detail: 'Ideale per un’occasione, un cambio di stagione o semplicemente per ritrovare chiarezza davanti all’armadio.',
-    image: '/images/styling-hands-v2.webp',
-    alt: 'Mani che accostano tessuti e colori durante una consulenza di stile',
-    duration: 'Circa 45–60 minuti',
-    location: 'In boutique, su appuntamento',
-    idealFor: ['Trovare linee e proporzioni adatte a te', 'Preparare un look per un’occasione', 'Fare acquisti più mirati', 'Valorizzare capi che possiedi già'],
-    includes: ['Breve confronto iniziale', 'Selezione di capi e accessori', 'Prove e proposte di abbinamento', 'Riepilogo dei look preferiti'],
-    steps: [
-      { title: 'Ci raccontiamo', text: 'Partiamo dalle tue giornate, da ciò che ami indossare e da quello che oggi senti meno tuo.' },
-      { title: 'Selezioniamo', text: 'Antonella prepara una scelta raccolta di forme, colori e texture coerenti con le tue indicazioni.' },
-      { title: 'Costruiamo i look', text: 'Proviamo con calma e verifichiamo insieme vestibilità, alternative e possibilità reali di utilizzo.' },
-    ],
-    message: 'Ciao Antonella, vorrei prenotare una consulenza personale.',
+    date: 'Giovedì 19 marzo 2026, ore 21',
+    isoDate: '2026-03-19',
+    author: 'Laura Monza',
+    book: 'Diario di bordo per navigatori in cerca di rotta',
+    note: 'Mental trainer e ricercatrice spirituale, ha parlato di crescita personale e benessere. Incontro nella nuova boutique di Via Carlo III di Savoia.',
   },
   {
-    slug: 'selezione-whatsapp',
-    number: '02',
-    title: 'Selezione su WhatsApp',
-    kicker: 'Boutique a distanza',
-    summary: 'Se non riesci a passare subito, inviaci una richiesta o la foto di un capo. Ti mostriamo dettagli, colori e possibili abbinamenti disponibili.',
-    detail: 'Una prima selezione pratica e personale, da confermare poi con la prova e la disponibilità del momento.',
-    image: '/images/accessories-v2.webp',
-    alt: 'Accessori e tessuti coordinati pronti per una selezione personalizzata',
-    duration: 'Risposta durante gli orari di apertura',
-    location: 'Su WhatsApp',
-    idealFor: ['Vedere i nuovi arrivi a distanza', 'Chiedere misure e colori disponibili', 'Preparare una visita in boutique', 'Trovare un abbinamento veloce'],
-    includes: ['Foto e brevi video dei capi', 'Indicazioni orientative sulla vestibilità', 'Proposte coordinate', 'Conferma della disponibilità'],
-    steps: [
-      { title: 'Invia la richiesta', text: 'Indica il tipo di capo, la taglia abituale, i colori preferiti e, se vuoi, una fascia di spesa.' },
-      { title: 'Ricevi la selezione', text: 'Prepariamo alcune proposte reali presenti in boutique con dettagli utili per confrontarle.' },
-      { title: 'Scegli come continuare', text: 'Puoi fissare una prova, chiedere di tenere da parte una proposta o passare quando preferisci.' },
-    ],
-    message: 'Ciao Antonella, vorrei ricevere una selezione personalizzata su WhatsApp.',
+    date: 'Giovedì 11 dicembre 2025, ore 21',
+    isoDate: '2025-12-11',
+    author: 'Valentina Petri',
+    book: 'Non ti sento (Rizzoli)',
+    note: 'Incontro con l’autrice e firmacopie.',
   },
   {
-    slug: 'appuntamento-boutique',
-    number: '03',
-    title: 'Appuntamento in boutique',
-    kicker: 'Tempo dedicato',
-    summary: 'Concordiamo un momento tranquillo e prepariamo in anticipo alcune proposte in base all’occasione, alle taglie e ai colori che ami.',
-    detail: 'Perfetto quando vuoi dedicarti alla scelta senza fretta o hai una richiesta precisa da risolvere.',
-    image: '/images/boutique-interior-v2.webp',
-    alt: 'Interno caldo e accogliente della boutique pronto per un appuntamento',
-    duration: 'Circa 45 minuti',
-    location: 'In boutique, su prenotazione',
-    idealFor: ['Fare una prova con calma', 'Preparare più look in anticipo', 'Scegliere per un evento', 'Essere seguita in modo continuativo'],
-    includes: ['Fascia oraria concordata', 'Selezione preparata prima dell’arrivo', 'Prove e alternative', 'Nessun obbligo di acquisto'],
-    steps: [
-      { title: 'Scegli il momento', text: 'Invia giorno e fascia oraria preferiti dal modulo: ti confermeremo la disponibilità.' },
-      { title: 'Dicci cosa cerchi', text: 'Più informazioni condividi, più la selezione iniziale sarà vicina alle tue esigenze.' },
-      { title: 'Vieni a provare', text: 'Troverai un piccolo percorso già pronto, che potremo modificare insieme liberamente.' },
+    date: 'Giugno 2025',
+    isoDate: '2025-06-26',
+    author: 'Moreno Orlandi',
+    book: 'Bottoni',
+    note: 'Presentazione della raccolta poetica.',
+  },
+];
+
+export type Article = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  isoDate: string;
+  image: string;
+  alt: string;
+  sections: readonly { heading?: string; paragraphs: readonly string[] }[];
+};
+
+/** Antonella's own articles, first published on her online shop in 2024. */
+export const articles: readonly Article[] = [
+  {
+    slug: 'il-tubino-nero-non-passa-mai-di-moda',
+    title: 'Il tubino nero non passa mai di moda',
+    excerpt: 'Sapete che cos’è l’LBD? Tranquille, non è un nuovo farmaco, né tantomeno una nuova tassa da pagare.',
+    date: '17 marzo 2024',
+    isoDate: '2024-03-17',
+    image: '/images/diario/tubino-nero.webp',
+    alt: 'Copertina dell’articolo sul tubino nero',
+    sections: [
+      { paragraphs: ['Sapete che cos’è l’LBD? Tranquille, non è un nuovo farmaco, né tantomeno una nuova tassa da pagare. Semplicemente è il “little black dress”, che tradotto letteralmente è “piccolo abito nero”, ovvero il tubino.', 'Io adoro il tubino, altro capo must che ogni donna dovrebbe avere nell’armadio.'] },
+      { heading: 'Storia del tubino', paragraphs: ['Il tubino nero fu avvistato per la prima volta nel 1926, in un bozzetto di Coco Chanel. “Un capo che tutto il mondo avrebbe indossato”: così lo definì la stilista francese, con l’intenzione di democratizzare l’eleganza. Un abito semplice, lungo fino al polpaccio e con la vita bassa.', 'Negli anni, ovviamente, ha subito delle variazioni, in conseguenza delle mode, ma non ha mai perso il suo fascino.'] },
+      { heading: 'Icone del tubino', paragraphs: ['Il volto più noto, tra quelli associati al tubino, è quello di Audrey Hepburn, che in “Colazione da Tiffany” ci ha fatto sognare indossando una creazione di Givenchy. In Italia, chi non ricorda Anita Ekberg in “La Dolce Vita” con il famosissimo abito firmato dalle Sorelle Fontana.', 'Persino Barbie ha reso omaggio a questo capo iconico nel 1964, quando si spoglia dei suoi abiti colorati per ispirarsi a Holly Golightly.'] },
+      { heading: 'Il tubino nella vita di tutti i giorni', paragraphs: ['E poi, beh, ci sono io, Antonella, che lo indosso per ogni occasione importante, e anche per il lavoro, rendendolo più easy giocando con gli accessori. Ma di questo ne parlerò prossimamente.'] },
     ],
-    message: 'Ciao Antonella, vorrei fissare un appuntamento dedicato in boutique.',
   },
   {
-    slug: 'idee-regalo',
-    number: '04',
-    title: 'Idee e confezioni regalo',
-    kicker: 'Un pensiero personale',
-    summary: 'Foulard, accessori e piccoli pensieri scelti con cura. Ti aiutiamo a trovare qualcosa di personale anche quando non conosci ogni dettaglio.',
-    detail: 'Le opzioni e la disponibilità delle confezioni vengono confermate direttamente dalla boutique.',
-    image: '/images/accessories-v2.webp',
-    alt: 'Borsa, foulard e piccoli accessori scelti come idee regalo',
-    duration: 'Da 15 minuti',
-    location: 'In boutique o prima selezione su WhatsApp',
-    idealFor: ['Compleanni e ricorrenze', 'Un ringraziamento speciale', 'Regali senza conoscere la taglia', 'Un piccolo pensiero dell’ultimo momento'],
-    includes: ['Ascolto del profilo della persona', 'Proposte per diverse fasce di spesa', 'Abbinamento tra più accessori', 'Confezione regalo, se disponibile'],
-    steps: [
-      { title: 'Raccontaci la persona', text: 'Età, colori, stile e occasione ci aiutano a evitare proposte generiche.' },
-      { title: 'Definiamo il budget', text: 'Prepariamo idee chiare nella fascia indicata, senza sorprese.' },
-      { title: 'Completiamo il gesto', text: 'Scegliamo insieme il dettaglio finale e la confezione più adatta.' },
+    slug: 'la-moda-passa-il-tailleur-resta',
+    title: 'La moda passa, il tailleur resta',
+    excerpt: 'Alzi la mano chi non ha un tailleur nell’armadio. Io, sistemando il mio, ne ho trovati almeno una dozzina.',
+    date: '16 marzo 2024',
+    isoDate: '2024-03-16',
+    image: '/images/diario/tailleur.webp',
+    alt: 'Copertina dell’articolo sul tailleur',
+    sections: [
+      { paragraphs: ['Alzi la mano chi non ha un tailleur nell’armadio! Per intenderci, un completo pantalone e giacca, oppure giacca e gonna tubino.', 'Il tailleur è un capo di abbigliamento femminile utilizzato solitamente come divisa da lavoro, elegante e seducente allo stesso tempo. Esiste da molti secoli e, più che un capo d’abbigliamento, è un vero e proprio status symbol: racchiude in sé la storia del potere conferito alla donna.'] },
+      { heading: 'Una dozzina, quasi tutti neri', paragraphs: ['Qualche tempo fa, sistemando il mio armadio, ho scoperto di averne almeno una dozzina, quasi tutti neri, che indosso al lavoro con sotto una t-shirt logata, e altri di vari colori. Ne ho anche uno fucsia.', 'Insomma, viva il tailleur, che è versatile all’ennesima potenza.'] },
+      { heading: 'Da Redfern a Saint Laurent', paragraphs: ['Ad inventare il tailleur è stato un uomo, tale John Redfern, nel 1885: lo disegnò per la principessa del Galles. Ovviamente non aveva i pantaloni, ma una gonna lunga.', 'Per arrivare al tailleur che tutte dovremmo avere nell’armadio dobbiamo attraversare varie epoche storiche, e soprattutto icone della moda come Coco Chanel e Christian Dior.', 'Solo nel 1966, anno in cui nacquero i Pooh, esattamente un anno prima che io nascessi, Yves Saint Laurent disegna il tailleur come noi lo conosciamo, con il pantalone.'] },
+      { heading: 'Armani, Versace e noi', paragraphs: ['Giorgio Armani, negli anni ’80, lo rende vero simbolo della donna di potere ed emancipata. Le spalline si ingrandiscono per sottolineare il punto vita.', 'Gianni Versace negli anni ’90 accorcia le gonne ai minimi termini, i colori sono sempre più accesi, per un modello super femminile.', 'È assolutamente un capo versatile, che ha mantenuto e mantiene il suo fascino e il suo potere simbolico.'] },
     ],
-    message: 'Ciao Antonella, sto cercando un’idea regalo e vorrei un consiglio.',
   },
   {
-    slug: 'outfit-occasioni',
-    number: '05',
-    title: 'Outfit per occasioni',
-    kicker: 'Eventi senza travestimenti',
-    summary: 'Costruiamo un look per cerimonie, lavoro, cene o momenti speciali partendo da come vuoi sentirti, non da una regola preconfezionata.',
-    detail: 'L’obiettivo è trovare un insieme curato che resti fedele a te e che possa essere riutilizzato anche dopo l’occasione.',
-    image: '/images/look-terracotta-v2.webp',
-    alt: 'Look femminile terracotta pensato per un’occasione speciale',
-    duration: 'Circa 45–60 minuti',
-    location: 'In boutique, preferibilmente su appuntamento',
-    idealFor: ['Cerimonie ed eventi', 'Colloqui e occasioni di lavoro', 'Cene e ricorrenze', 'Un look completo ma naturale'],
-    includes: ['Definizione del tono dell’evento', 'Prova di più silhouette', 'Accessori e sovrapposizioni', 'Alternative per riutilizzare i capi'],
-    steps: [
-      { title: 'Partiamo dall’occasione', text: 'Dress code, orario, luogo e sensazione desiderata ci danno la direzione.' },
-      { title: 'Troviamo il centro', text: 'Scegliamo il capo protagonista e costruiamo intorno colori e proporzioni.' },
-      { title: 'Pensiamo anche a dopo', text: 'Verifichiamo come separare e riutilizzare gli elementi del look nella vita quotidiana.' },
+    slug: 'la-storia-dei-jeans',
+    title: 'La storia dei jeans, da Genova al mondo',
+    excerpt: 'Nati come abito da lavoro, diventati simbolo di libertà: il viaggio di un capo che ha cambiato il guardaroba di tutti.',
+    date: '17 aprile 2024',
+    isoDate: '2024-04-17',
+    image: '/images/diario/jeans.webp',
+    alt: 'Copertina dell’articolo sulla storia dei jeans',
+    sections: [
+      { paragraphs: ['Nell’universo della moda, pochi capi possono vantare una storia tanto ricca e un appeal così universale quanto i jeans. Nati come abbigliamento da lavoro per la loro resistenza e praticità, hanno attraversato secoli, culture e classi sociali, trasformandosi in un simbolo di stile, ribellione e identità.'] },
+      { heading: 'Le origini', paragraphs: ['I jeans trovano le loro radici in due città distanti: Genova e Nîmes. A Genova i marinai indossavano indumenti di un robusto tessuto di cotone, noto come “Genoese” o “jeane”. Quasi contemporaneamente a Nîmes si sviluppò un tessuto simile, il “denim” (da “de Nîmes”).', 'Si deve però a Levi Strauss, immigrato tedesco arrivato a San Francisco durante la corsa all’oro, e al sarto Jacob Davis l’invenzione dei jeans come li conosciamo: nel 1873 brevettarono i rivetti di metallo per rinforzare i punti più sollecitati dei pantaloni da lavoro.'] },
+      { heading: 'Da divisa da lavoro a simbolo', paragraphs: ['Nel Novecento i jeans escono dai luoghi di lavoro. Negli anni ’50 e ’60 diventano il simbolo della gioventù ribelle, grazie a icone come James Dean e Marlon Brando. Negli anni ’70 e ’80, con il rock e la cultura pop, si adattano a ogni stile, dagli hippie al punk.'] },
+      { heading: 'I jeans oggi', paragraphs: ['Oggi sono un capo essenziale, apprezzato per la versatilità: skinny, a vita alta, bootcut, boyfriend. Continuano a reinventarsi restando sempre attuali.', 'Sono molto più di un paio di pantaloni: un’affermazione di individualità e una testimonianza della nostra storia. Alcuni classici, semplicemente, non passano mai di moda.'] },
     ],
-    message: 'Ciao Antonella, avrei bisogno di un outfit per un’occasione speciale.',
+  },
+];
+
+/** Verified public reviews (Trustpilot, 2024). */
+export const reviews = [
+  {
+    quote: 'Grazie mille, abito bellissimo, velocità nella consegna… impeccabile! La signora Antonella è stata molto cordiale, puntuale e ha ascoltato ogni mia esigenza. Grazie mille per aver accompagnato al pacco delle gustose caramelle… la consiglio!',
+    author: 'Alessandro',
+    source: 'Trustpilot, maggio 2024',
   },
   {
-    slug: 'capsule-guardaroba',
-    number: '06',
-    title: 'Capsule guardaroba',
-    kicker: 'Più combinazioni, meno rumore',
-    summary: 'Creiamo una piccola selezione coordinata di capi che lavorano bene insieme e rendono più semplici le scelte di ogni giorno.',
-    detail: 'La capsule può partire da zero oppure integrare colori e categorie che nel tuo armadio sono già presenti.',
-    image: '/images/capsule-rack-v2.webp',
-    alt: 'Capsule guardaroba coordinata nei toni panna, salvia e terracotta',
-    duration: 'Circa 60 minuti',
-    location: 'In boutique, su appuntamento',
-    idealFor: ['Rinnovare il guardaroba con metodo', 'Ridurre acquisti isolati', 'Creare look facili da combinare', 'Preparare un cambio di stagione'],
-    includes: ['Definizione della palette', 'Selezione di capi base e carattere', 'Almeno cinque combinazioni', 'Lista delle eventuali priorità future'],
-    steps: [
-      { title: 'Facciamo il punto', text: 'Individuiamo ciò che usi di più, ciò che manca e i contesti principali della tua settimana.' },
-      { title: 'Creiamo la base', text: 'Scegliamo pochi elementi compatibili per colore, volume e livello di formalità.' },
-      { title: 'Moltiplichiamo', text: 'Proviamo gli incroci tra i capi per assicurarci che la selezione apra davvero nuove possibilità.' },
-    ],
-    message: 'Ciao Antonella, vorrei creare una piccola capsule guardaroba.',
-  },
-  {
-    slug: 'abbinamenti-con-i-tuoi-capi',
-    number: '07',
-    title: 'Abbinamenti con i tuoi capi',
-    kicker: 'Partiamo da ciò che hai',
-    summary: 'Porta un capo che ami ma usi poco, oppure inviaci una foto: cercheremo nuovi equilibri con la selezione presente in boutique.',
-    detail: 'Un servizio concreto per evitare doppioni e scegliere soltanto ciò che completa davvero il tuo guardaroba.',
-    image: '/images/styling-hands-v2.webp',
-    alt: 'Tessuti e accessori accostati per creare nuovi abbinamenti',
-    duration: 'Circa 30–45 minuti',
-    location: 'In boutique; primo confronto anche su WhatsApp',
-    idealFor: ['Usare di più un acquisto importante', 'Abbinare un colore difficile', 'Completare giacche, gonne o pantaloni', 'Evitare capi troppo simili'],
-    includes: ['Analisi del capo di partenza', 'Proposte per colore e proporzione', 'Prova di accessori e sovrapposizioni', 'Due o più idee complete'],
-    steps: [
-      { title: 'Porta il tuo punto di partenza', text: 'Può essere un capo, una scarpa o anche solo una fotografia ben illuminata.' },
-      { title: 'Cerchiamo connessioni', text: 'Confrontiamo texture, lunghezze e colori senza snaturare il pezzo che vuoi valorizzare.' },
-      { title: 'Salviamo le idee', text: 'Puoi fotografare gli abbinamenti riusciti per ricordarli facilmente a casa.' },
-    ],
-    message: 'Ciao Antonella, vorrei trovare nuovi abbinamenti per un capo che possiedo già.',
-  },
-  {
-    slug: 'cambio-stagione-guidato',
-    number: '08',
-    title: 'Cambio stagione guidato',
-    kicker: 'Una direzione chiara',
-    summary: 'Facciamo ordine tra necessità, colori e priorità della nuova stagione, così ogni eventuale acquisto ha un ruolo preciso.',
-    detail: 'Non è un riordino a domicilio: è un incontro in boutique per tradurre le tue esigenze in una lista semplice e in look concreti.',
-    image: '/images/look-oatmeal-v2.webp',
-    alt: 'Maglieria leggera e gonna midi adatte al passaggio di stagione',
-    duration: 'Circa 45–60 minuti',
-    location: 'In boutique, su appuntamento',
-    idealFor: ['Affrontare le mezze stagioni', 'Capire quali capi mancano davvero', 'Aggiornare i colori del guardaroba', 'Pianificare acquisti nel tempo'],
-    includes: ['Mappa delle esigenze', 'Proposte di stratificazione', 'Palette stagionale personale', 'Priorità divise tra subito e più avanti'],
-    steps: [
-      { title: 'Elenca le situazioni', text: 'Lavoro, tempo libero, eventi e clima reale diventano la base del percorso.' },
-      { title: 'Individuiamo i vuoti', text: 'Separiamo ciò che serve davvero da ciò che è soltanto una tentazione momentanea.' },
-      { title: 'Proviamo una direzione', text: 'Costruiamo alcuni look guida e una piccola lista da seguire senza fretta.' },
-    ],
-    message: 'Ciao Antonella, vorrei prenotare un incontro per il cambio stagione.',
+    quote: 'Tutto perfetto! Arrivato nei tempi!',
+    author: 'Elisabetta',
+    source: 'Trustpilot, luglio 2024',
   },
 ] as const;
 
-export type Service = (typeof services)[number];
-
-export const articles = [
+export const faqs: readonly { group: string; items: readonly (readonly [string, string])[] }[] = [
   {
-    slug: 'guardaroba-che-ti-somiglia',
-    title: 'Un guardaroba che ti somiglia davvero',
-    excerpt: 'Meno capi scelti per abitudine, più combinazioni che raccontano la tua vita reale.',
-    category: 'Guardaroba',
-    date: '28 agosto 2026',
-    isoDate: '2026-08-28',
-    readTime: '6 minuti',
-    image: '/images/capsule-rack-v2.webp',
-    alt: 'Una capsule wardrobe coordinata nei toni naturali',
-    intro: 'Costruire un guardaroba personale non significa seguire regole rigide. Significa osservare le proprie giornate, capire cosa ci fa sentire a nostro agio e scegliere capi capaci di lavorare insieme.',
-    sections: [
-      { heading: 'Parti dalla tua settimana, non dalle tendenze', paragraphs: ['Prima di acquistare, pensa a come trascorri davvero il tempo: lavoro, spostamenti, occasioni informali, serate e momenti per te. I capi migliori sono quelli che accompagnano almeno due o tre di questi contesti.', 'Annota per una settimana cosa indossi più volentieri e cosa invece rimane nell’armadio. Non è un giudizio: è una fotografia utile del tuo stile reale.'] },
-      { heading: 'Scegli una piccola palette', paragraphs: ['Due neutri, uno o due colori carattere e un accento sono già sufficienti. Panna, antracite, salvia e terracotta, per esempio, si combinano facilmente e restano caldi sul viso.', 'Una palette non limita: rende più semplice creare nuovi abbinamenti e capire quali acquisti aggiungono davvero possibilità.'] },
-      { heading: 'Controlla le combinazioni', paragraphs: ['Un capo versatile dovrebbe dialogare con almeno tre elementi che possiedi già. Provalo con scarpe diverse, aggiungi una giacca e verifica se funziona sia aperto sia sovrapposto.', 'In boutique possiamo fare questa prova insieme, partendo da un capo che ami già o da una necessità concreta.'] },
+    group: 'La boutique',
+    items: [
+      ['Dove si trova Antonella Moda e Dintorni?', 'A Vercelli, in Via Carlo III di Savoia 10, all’angolo con Via Dante. Dal 2026 è questa la nuova sede della boutique.'],
+      ['Quali sono gli orari?', 'Lunedì 16:00–19:30. Da martedì a venerdì 9:00–12:30 e 16:00–19:30. Sabato 10:00–12:30 e 16:00–19:30. Domenica chiuso. Nei giorni festivi gli orari possono cambiare: in caso di dubbio scrivici.'],
+      ['Che cosa trovo in boutique?', 'Abbigliamento donna versatile e femminile: abiti, completi e tailleur, cappotti e giacche, bluse, gonne, pantaloni e accessori. Tra i marchi c’è Artigli. Qualità e creatività, con un’attenzione particolare al prezzo.'],
+      ['Chi è Antonella?', 'Antonella Mangolini, titolare della boutique, lavora nella moda da più di 35 anni. Sceglie personalmente ogni capo e consiglia le clienti una per una.'],
     ],
   },
   {
-    slug: 'colori-naturali-come-abbinarli',
-    title: 'Colori naturali: come abbinarli senza spegnerli',
-    excerpt: 'Salvia, terracotta, avena e cuoio: una palette accogliente che cambia con texture e proporzioni.',
-    category: 'Colori',
-    date: '20 agosto 2026',
-    isoDate: '2026-08-20',
-    readTime: '5 minuti',
-    image: '/images/styling-hands-v2.webp',
-    alt: 'Accostamento di tessuti nei toni salvia, terracotta e crema',
-    intro: 'I colori naturali sono facili da amare ma, se usati tutti nello stesso modo, rischiano di diventare piatti. Il segreto è creare differenze di luce, materia e profondità.',
-    sections: [
-      { heading: 'Un colore chiaro per dare respiro', paragraphs: ['Panna, avorio e burro illuminano salvia e terracotta senza creare il contrasto netto del bianco ottico. Sono ideali vicino al viso e rendono più leggeri i tessuti importanti.'] },
-      { heading: 'Mescola superfici diverse', paragraphs: ['Una maglia opaca, una gonna leggermente lucida e una borsa in pelle possono avere colori vicini ma raccontare livelli differenti. La materia crea profondità anche quando la palette è molto calma.'] },
-      { heading: 'Aggiungi un punto scuro', paragraphs: ['Antracite, testa di moro o blu inchiostro danno struttura. Basta una scarpa, una cintura o una giacca per rendere l’insieme più deciso senza perdere morbidezza.'] },
+    group: 'Capi e disponibilità',
+    items: [
+      ['I capi sul sito sono ancora disponibili?', 'Il sito mostra capi fotografati in boutique, che cambiano ogni stagione. Per sapere cosa c’è adesso, taglie e prezzi, scrivici su WhatsApp con il nome del capo: rispondiamo negli orari di negozio.'],
+      ['Posso vedere i capi senza venire in negozio?', 'Sì. Puoi chiederci foto su WhatsApp oppure prenotare una videochiamata: Antonella ti mostra i capi in diretta dal negozio.'],
+      ['Posso far mettere da parte un capo?', 'Sì, per qualche giorno, così passi a provarlo con calma.'],
+      ['Si può acquistare online?', 'Il negozio online non è più attivo. Per acquistare passa in boutique o contattaci su WhatsApp: troviamo insieme la soluzione più comoda.'],
     ],
   },
   {
-    slug: 'giacca-quattro-modi',
-    title: 'Una giacca, quattro modi di sentirla propria',
-    excerpt: 'Il capo più utile non è quello più formale, ma quello che cambia tono insieme a te.',
-    category: 'Come indossarlo',
-    date: '12 agosto 2026',
-    isoDate: '2026-08-12',
-    readTime: '4 minuti',
-    image: '/images/look-sage-v2.webp',
-    alt: 'Donna con blazer salvia e pantaloni avorio',
-    intro: 'Una giacca morbida può accompagnare moltissime giornate. Cambiano ciò che metti sotto, le proporzioni e gli accessori: il capo resta lo stesso, ma l’effetto è ogni volta diverso.',
-    sections: [
-      { heading: 'Con il pantalone coordinato', paragraphs: ['È la versione più pulita: completa ma non rigida. Scegli un top luminoso e una scarpa semplice per mantenere l’insieme naturale.'] },
-      { heading: 'Con denim e camicia', paragraphs: ['Il denim rende la giacca quotidiana. Arrotola leggermente le maniche e lascia la camicia morbida: il contrasto tra struttura e informalità fa tutto il lavoro.'] },
-      { heading: 'Sopra un abito fluido', paragraphs: ['La giacca definisce le spalle e rende l’abito adatto anche alle mezze stagioni. Funziona bene quando la lunghezza arriva appena sotto il fianco.'] },
-      { heading: 'Con maglia e pantalone scuro', paragraphs: ['Per una giornata piena, usa una base tono su tono e lascia che la giacca sia il punto colore. È una soluzione veloce ma molto curata.'] },
+    group: 'Servizi',
+    items: [
+      ['Che cos’è “Un libro in borsa”?', 'È il gruppo di lettura nato in boutique da un’idea di Antonella. Ci si incontra una volta al mese: ogni ospite propone un titolo, se ne estrae uno a sorte e diventa la lettura comune. Ci sono anche serate con autrici e autori.'],
+      ['Fate buoni regalo?', 'Sì, da 15 a 250 €. Si usano in boutique.'],
+      ['Serve un appuntamento per entrare?', 'No. L’appuntamento è utile solo se vuoi che prepariamo una selezione prima del tuo arrivo, per esempio per una cerimonia.'],
     ],
   },
-  {
-    slug: 'vestirsi-nelle-mezze-stagioni',
-    title: 'Vestirsi bene nelle mezze stagioni',
-    excerpt: 'Strati leggeri, texture compatibili e un capo esterno che tiene insieme tutto.',
-    category: 'Stagioni',
-    date: '4 agosto 2026',
-    isoDate: '2026-08-04',
-    readTime: '5 minuti',
-    image: '/images/look-oatmeal-v2.webp',
-    alt: 'Donna con maglia leggera color avena e gonna rosa polvere',
-    intro: 'Le mezze stagioni chiedono flessibilità. Invece di aggiungere strati a caso, conviene pensare a una base leggera, un livello morbido e un capo esterno facile da togliere.',
-    sections: [
-      { heading: 'La base deve respirare', paragraphs: ['Una camicia, una t-shirt compatta o una maglia sottile sono più semplici da gestire durante la giornata. Evita volumi eccessivi sotto giacche e cardigan.'] },
-      { heading: 'Sovrapponi senza appesantire', paragraphs: ['Fai dialogare le lunghezze: una maglia morbida sopra una gonna fluida funziona se almeno uno dei due elementi mantiene una linea pulita.'] },
-      { heading: 'Porta con te un accessorio utile', paragraphs: ['Un foulard protegge dal vento, aggiunge colore e occupa pochissimo spazio. È uno dei dettagli più efficaci per adattare un look al cambio di temperatura.'] },
-    ],
-  },
-  {
-    slug: 'accessori-piccoli-gesti',
-    title: 'Accessori: piccoli gesti, grandi differenze',
-    excerpt: 'Come completare un look senza riempirlo, scegliendo un solo punto su cui attirare lo sguardo.',
-    category: 'Dettagli',
-    date: '25 luglio 2026',
-    isoDate: '2026-07-25',
-    readTime: '4 minuti',
-    image: '/images/accessories-v2.webp',
-    alt: 'Accessori coordinati su una superficie chiara',
-    intro: 'Gli accessori migliori non chiedono attenzione a tutti i costi. Danno ritmo, collegano i colori e permettono di rinnovare anche i capi più conosciuti.',
-    sections: [
-      { heading: 'Scegli un protagonista', paragraphs: ['Se il foulard ha una fantasia importante, lascia che borsa e gioielli restino essenziali. Se la borsa è il punto colore, riprendi solo una piccola sfumatura altrove.'] },
-      { heading: 'Ripeti, non copiare', paragraphs: ['I colori non devono essere identici. È più interessante riprendere una famiglia cromatica: salvia con oliva, cuoio con terracotta, cipria con panna.'] },
-      { heading: 'Pensa anche alla funzione', paragraphs: ['Una borsa deve contenere ciò che usi davvero, un foulard deve essere piacevole sulla pelle e un gioiello deve accompagnarti senza diventare un pensiero. La bellezza quotidiana nasce anche dalla comodità.'] },
-    ],
-  },
-  {
-    slug: 'scegliere-con-cura',
-    title: 'Cosa significa scegliere un capo con cura',
-    excerpt: 'Vestibilità, materia, possibilità di utilizzo e quella sensazione immediata di riconoscersi.',
-    category: 'Il nostro modo',
-    date: '16 luglio 2026',
-    isoDate: '2026-07-16',
-    readTime: '6 minuti',
-    image: '/images/boutique-interior-v2.webp',
-    alt: 'Interno caldo e luminoso di una piccola boutique',
-    intro: 'La scelta di un capo comincia molto prima della prova. Guardiamo come cade, come si muove, con cosa può essere abbinato e se mantiene il suo carattere nella vita di tutti i giorni.',
-    sections: [
-      { heading: 'La vestibilità viene prima del numero', paragraphs: ['Due capi della stessa taglia possono comportarsi in modo completamente diverso. Per questo osserviamo spalle, punto vita, lunghezza e libertà di movimento, senza fermarci all’etichetta.'] },
-      { heading: 'La materia deve essere coerente', paragraphs: ['Una texture bella da vedere deve anche essere piacevole da indossare e adatta all’uso previsto. Valutiamo mano, peso, trasparenza e facilità di cura.'] },
-      { heading: 'Un capo deve aprire possibilità', paragraphs: ['Prima di consigliarlo immaginiamo almeno tre combinazioni. Se funziona solo in un’occasione molto specifica, deve esserci una ragione davvero buona per sceglierlo.'] },
-    ],
-  },
-] as const;
-
-export type Article = (typeof articles)[number];
-
-export const hours = [
-  ['Lunedì', '16:00–19:30'],
-  ['Martedì', '09:00–12:30 · 16:00–19:30'],
-  ['Mercoledì', '09:00–12:30 · 16:00–19:30'],
-  ['Giovedì', '09:00–12:30 · 16:00–19:30'],
-  ['Venerdì', '09:00–12:30 · 16:00–19:30'],
-  ['Sabato', '10:00–12:30 · 16:00–19:30'],
-  ['Domenica', 'Chiuso'],
-] as const;
+];

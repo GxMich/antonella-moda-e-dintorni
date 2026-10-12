@@ -1,25 +1,35 @@
 import type { Metadata } from 'next';
 import AppointmentForm from '../components/AppointmentForm';
-import InnerHeader from '../components/InnerHeader';
 import SiteFooter from '../components/SiteFooter';
+import SiteHeader from '../components/SiteHeader';
 import { business, services } from '../content';
 
 export const metadata: Metadata = {
-  title: 'Richiedi un appuntamento | Antonella Moda e Dintorni',
-  description: 'Prepara una richiesta di appuntamento o consulenza nella boutique Antonella Moda e Dintorni a Vercelli.',
+  title: 'Prenota una videochiamata o un appuntamento | Antonella Moda e Dintorni',
+  description: 'Prepara in un minuto la richiesta di videochiamata o appuntamento in boutique a Vercelli: si apre WhatsApp con il messaggio già scritto.',
   alternates: { canonical: '/appuntamento' },
 };
 
 export default function AppointmentPage() {
   const serviceOptions = services.map(({ slug, title }) => ({ slug, title }));
-
   return (
-    <main className="inner-page appointment-page">
-      <InnerHeader active="servizi" />
-      <section className="appointment-hero"><div><span className="section-index">Appuntamento · Vercelli</span><h1>Prepariamo il tempo<br /><em>per te.</em></h1></div><p>Compila ciò che sai già. Alla fine si aprirà WhatsApp con un messaggio pronto: potrai controllarlo, modificarlo e inviarlo direttamente ad Antonella.</p></section>
-      <section className="appointment-layout section-shell"><div className="appointment-aside"><span className="section-index">Prima di iniziare</span><h2>Non serve avere<br /><em>le idee chiare.</em></h2><p>Puoi indicare soltanto il servizio e il tuo nome. Giorno, budget e dettagli ci aiutano a preparare meglio la risposta, ma potremo definirli insieme.</p><dl><div><dt>Conferma</dt><dd>Direttamente su WhatsApp</dd></div><div><dt>Durata</dt><dd>In base al servizio scelto</dd></div><div><dt>Dove</dt><dd>Via Dante Alighieri 10, Vercelli</dd></div></dl></div><AppointmentForm whatsappUrl={business.whatsappUrl} serviceOptions={serviceOptions} /></section>
-      <section className="appointment-note"><span>Preferisci scrivere liberamente?</span><p>Apri WhatsApp e raccontaci in poche parole cosa stai cercando.</p><a className="text-link" href={business.whatsappUrl} target="_blank" rel="noreferrer">Scrivi ad Antonella <span className="arrow">↗</span></a></section>
+    <>
+      <SiteHeader />
+      <main id="contenuto" className="page">
+        <header className="page-hero">
+          <h1>Prenota con Antonella</h1>
+          <p>Compila quello che sai già. Alla fine si apre WhatsApp con il messaggio pronto: lo controlli e lo invii tu. La prenotazione vale quando Antonella ti risponde.</p>
+        </header>
+        <div className="appointment-layout">
+          <AppointmentForm whatsappUrl={business.whatsappUrl} serviceOptions={serviceOptions} />
+          <aside className="appointment-aside">
+            <h2>Preferisci telefonare?</h2>
+            <p><a href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a></p>
+            <p>La boutique è in {business.street}, {business.corner}, a Vercelli. Non serve appuntamento per entrare negli orari di apertura.</p>
+          </aside>
+        </div>
+      </main>
       <SiteFooter />
-    </main>
+    </>
   );
 }

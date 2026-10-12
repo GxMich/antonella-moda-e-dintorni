@@ -1,25 +1,24 @@
 import type { MetadataRoute } from 'next';
-import { articles, products, services, type Product } from './content';
+import { articles, products, services } from './content';
 import { siteUrl } from './site';
 
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteUrl;
+  const now = new Date();
+  const page = (path: string, priority: number, changeFrequency: 'weekly' | 'monthly' | 'yearly' = 'monthly') => ({ url: `${siteUrl}${path}`, lastModified: now, changeFrequency, priority });
   return [
-    { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-    { url: `${base}/collezione`, lastModified: new Date(), changeFrequency: 'weekly', priority: .9 },
-    { url: `${base}/servizi`, lastModified: new Date(), changeFrequency: 'monthly', priority: .85 },
-    { url: `${base}/appuntamento`, lastModified: new Date(), changeFrequency: 'monthly', priority: .8 },
-    { url: `${base}/chi-siamo`, lastModified: new Date(), changeFrequency: 'yearly', priority: .75 },
-    { url: `${base}/magazine`, lastModified: new Date(), changeFrequency: 'monthly', priority: .8 },
-    { url: `${base}/boutique`, lastModified: new Date(), changeFrequency: 'monthly', priority: .8 },
-    { url: `${base}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: .65 },
-    ...products.map((product) => {
-      const { slug, updatedAt } = product as Product;
-      return { url: `${base}/capo/${slug}`, lastModified: updatedAt ? new Date(updatedAt) : new Date(), changeFrequency: 'weekly' as const, priority: .7 };
-    }),
-    ...services.map(({ slug }) => ({ url: `${base}/servizi/${slug}`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: .72 })),
-    ...articles.map(({ slug, isoDate }) => ({ url: `${base}/magazine/${slug}`, lastModified: new Date(isoDate), changeFrequency: 'monthly' as const, priority: .65 })),
+    page('', 1, 'weekly'),
+    page('/collezione', 0.9, 'weekly'),
+    page('/boutique', 0.9),
+    page('/servizi', 0.8),
+    page('/un-libro-in-borsa', 0.8),
+    page('/chi-siamo', 0.75, 'yearly'),
+    page('/diario', 0.7),
+    page('/appuntamento', 0.7),
+    page('/faq', 0.65),
+    ...products.map((product) => ({ url: `${siteUrl}/capo/${product.slug}`, lastModified: new Date(product.updatedAt), changeFrequency: 'monthly' as const, priority: 0.7 })),
+    ...services.map((service) => page(`/servizi/${service.slug}`, 0.7)),
+    ...articles.map((article) => ({ url: `${siteUrl}/diario/${article.slug}`, lastModified: new Date(article.isoDate), changeFrequency: 'yearly' as const, priority: 0.6 })),
   ];
 }

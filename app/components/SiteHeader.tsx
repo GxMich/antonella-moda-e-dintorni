@@ -1,34 +1,64 @@
 'use client';
 
 import Link from 'next/link';
+import CamerinoButton from './camerino/CamerinoButton';
+import TransitionLink from './motion/TransitionLink';
+import OpenNow from './OpenNow';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { business } from '../content';
+import { business, whatsappLink } from '../content';
+import { assetPath } from '../site';
+
+const links = [
+  ['/collezione', 'Collezione'],
+  ['/servizi', 'Servizi'],
+  ['/un-libro-in-borsa', 'Un libro in borsa'],
+  ['/diario', 'Diario'],
+  ['/chi-siamo', 'Chi siamo'],
+  ['/boutique', 'Dove siamo'],
+] as const;
 
 export default function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('keydown', closeOnEscape);
+    document.documentElement.classList.add('menu-is-open');
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.documentElement.classList.remove('menu-is-open');
+    };
+  }, [menuOpen]);
 
-  const closeMenu = () => setMenuOpen(false);
+  const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`) || (href === '/collezione' && pathname?.startsWith('/capo/'));
+
   return (
-    <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <Link className="wordmark" href="/#top" aria-label="Antonella Moda e Dintorni, torna all’inizio"><span>Antonella</span><small>Moda e Dintorni</small></Link>
-      <nav id="main-nav" className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navigazione principale">
-        <Link href="/collezione" onClick={closeMenu}>Collezione</Link>
-        <Link href="/servizi" onClick={closeMenu}>Servizi</Link>
-        <Link href="/magazine" onClick={closeMenu}>Magazine</Link>
-        <Link href="/boutique" onClick={closeMenu}>Boutique</Link>
+    <header className="site-header">
+      <Link className="brand" href="/" aria-label={`${business.name}, homepage`} onClick={() => setMenuOpen(false)}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={assetPath('/images/brand/logo.png')} alt="" width={455} height={430} />
+      </Link>
+      <nav id="main-nav" className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Navigazione principale">
+        {links.map(([href, label]) => (
+          <TransitionLink key={href} href={href} aria-current={isActive(href) ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</TransitionLink>
+        ))}
+        <div className="main-nav-contact">
+          <a href={`tel:${business.phoneHref}`}>Chiama {business.phoneDisplay}</a>
+          <span>{business.street}, {business.corner}, Vercelli</span>
+        </div>
       </nav>
       <div className="header-actions">
-        <a className="text-link header-whatsapp" href={business.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp <span className="arrow" aria-hidden="true">↗</span></a>
-        <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-nav" onClick={() => setMenuOpen((open) => !open)}><span>{menuOpen ? 'Chiudi' : 'Menu'}</span></button>
+        <Link className="header-open" href="/boutique" onClick={() => setMenuOpen(false)}><OpenNow compact /></Link>
+        <CamerinoButton />
+        <a className="button button-small header-whatsapp" href={whatsappLink('Ciao Antonella, ')} target="_blank" rel="noreferrer">WhatsApp</a>
       </div>
+      <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-nav" onClick={() => setMenuOpen((open) => !open)}>
+        <span className="menu-toggle-lines" aria-hidden="true" />
+        <span>{menuOpen ? 'Chiudi' : 'Menu'}</span>
+      </button>
     </header>
   );
 }

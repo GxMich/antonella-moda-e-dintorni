@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import InnerHeader from '../../components/InnerHeader';
+import AddToCamerino from '../../components/camerino/AddToCamerino';
 import ProductCard from '../../components/ProductCard';
-import SiteImage from '../../components/SiteImage';
 import SiteFooter from '../../components/SiteFooter';
-import { business, products, type Product } from '../../content';
-import { assetUrl } from '../../site';
+import SiteHeader from '../../components/SiteHeader';
+import SiteImage from '../../components/SiteImage';
+import { business, products, whatsappLink } from '../../content';
+import { assetUrl, pageUrl } from '../../site';
 
 export function generateStaticParams() { return products.map(({ slug }) => ({ slug })); }
 
@@ -14,52 +15,75 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const product = products.find((item) => item.slug === slug);
   if (!product) return { title: 'Capo non trovato | Antonella Moda e Dintorni' };
+  const title = `${product.name}${product.brand ? ` ${product.brand}` : ''} | Antonella Moda e Dintorni, Vercelli`;
   return {
-    title: `${product.name} | Antonella Moda e Dintorni`,
+    title,
     description: product.description,
     alternates: { canonical: `/capo/${product.slug}` },
-    openGraph: { title: product.name, description: product.description, images: [{ url: assetUrl(product.image), alt: product.alt }] },
-    twitter: { card: 'summary_large_image', title: product.name, description: product.description, images: [assetUrl(product.image)] },
+    openGraph: { title: product.name, description: product.description, images: [{ url: assetUrl(product.images[0].src), alt: product.images[0].alt }] },
+    twitter: { card: 'summary_large_image', title: product.name, description: product.description, images: [assetUrl(product.images[0].src)] },
   };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const productIndex = products.findIndex((item) => item.slug === slug);
-  if (productIndex < 0) notFound();
-  const product = products[productIndex] as Product;
-  const related = [...products.slice(productIndex + 1), ...products.slice(0, productIndex)].slice(0, 3);
-  const gallery = product.gallery?.length ? product.gallery : [{ src: product.image, alt: product.alt }];
-  const message = encodeURIComponent(`Ciao Antonella, vorrei avere informazioni su “${product.name}”.`);
-  const productSchema = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, image: assetUrl(product.image), description: product.description, category: product.category, brand: { '@type': 'Brand', name: business.name } };
+  const index = products.findIndex((item) => item.slug === slug);
+  if (index < 0) notFound();
+  const product = products[index];
+  const sameCategory = products.filter((item) => item.category === product.category && item.slug !== product.slug);
+  const others = products.filter((item) => item.category !== product.category);
+  const related = [...sameCategory, ...others].slice(0, 4);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images.map((image) => assetUrl(image.src)),
+    description: product.description,
+    category: product.category,
+    color: product.colors,
+    url: pageUrl(`/capo/${product.slug}`),
+    ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
+  };
 
   return (
-    <main className="product-detail-page">
-      <InnerHeader active="collezione" />
-      <section className="detail-layout">
-        <div className={`detail-gallery ${gallery.length > 1 ? 'is-multiple' : ''}`}>
-          {gallery.map((image, index) => <div className="detail-image" key={image.src}><SiteImage src={image.src} alt={image.alt} sizes="(max-width: 800px) 100vw, 55vw" priority={index === 0} /></div>)}
+    <>
+      <SiteHeader />
+      <main id="contenuto" className="page product-page">
+        <nav className="breadcrumb" aria-label="Percorso">
+          <Link href="/collezione">Collezione</Link> <span aria-hidden="true">/</span> <span>{product.category}</span>
+        </nav>
+        <div className="product-layout">
+          <div className="product-gallery" tabIndex={0} aria-label="Foto del capo, scorri per vederle tutte">
+            {product.images.map((image, imageIndex) => (
+              <div className={imageIndex === 0 ? 'product-photo frame' : 'product-photo'} key={image.src} style={imageIndex === 0 ? { viewTransitionName: `capo-${product.slug}` } as React.CSSProperties : undefined}>
+                <SiteImage src={image.src} alt={image.alt} sizes="(max-width: 800px) 88vw, 40vw" priority={imageIndex === 0} />
+              </div>
+            ))}
+          </div>
+          <div className="product-info">
+            {product.brand && <p className="product-brand">{product.brand}</p>}
+            <h1>{product.name}</h1>
+            <p className="product-description">{product.description}</p>
+            <dl className="product-facts">
+              <div><dt>Colore</dt><dd>{product.colors}</dd></div>
+              <div><dt>Categoria</dt><dd>{product.category}</dd></div>
+              <div><dt>Dettagli</dt><dd><ul>{product.details.map((detail) => <li key={detail}>{detail}</li>)}</ul></dd></div>
+            </dl>
+            <AddToCamerino slug={product.slug} />
+            <div className="product-ask">
+              <a className="button button-ghost" href={whatsappLink(`Ciao Antonella, è ancora disponibile “${product.name}”? La mia taglia è …`)} target="_blank" rel="noreferrer">Chiedi taglia e prezzo</a>
+              <a className="button button-ghost" href={whatsappLink(`Ciao Antonella, vorrei vedere “${product.name}” in videochiamata. Sarei libera il giorno … alle ore …`)} target="_blank" rel="noreferrer">Vedilo in videochiamata</a>
+            </div>
+            <p className="product-note">Foto scattate nella boutique. Taglie, prezzo e disponibilità te li conferma Antonella, di solito in pochi minuti negli orari di negozio. Oppure passa in {business.street}, a Vercelli.</p>
+          </div>
         </div>
-        <div className="detail-copy">
-          <span className="section-index">Dettaglio capo</span>
-          <p className="eyebrow">{product.category} · {product.badge}</p>
-          <h1>{product.name}</h1>
-          <p className="detail-description">{product.description}</p>
-          <p className="detail-story">{product.story}</p>
-          <dl className="product-facts">
-            <div><dt>Taglie</dt><dd>{product.sizes}</dd></div>
-            <div><dt>Colori</dt><dd>{product.colors}</dd></div>
-            <div><dt>Vestibilità</dt><dd>{product.fit}</dd></div>
-          </dl>
-          <div className="product-features"><span>Dettagli</span><ul>{product.details.map((detail) => <li key={detail}>{detail}</li>)}</ul></div>
-          <p className="detail-note">Disponibilità, composizione esatta e varianti vengono confermate direttamente dalla boutique. Le immagini e i dati di questa demo sono rappresentativi.</p>
-          <a className="button button-dark" href={`${business.whatsappUrl}?text=${message}`} target="_blank" rel="noreferrer">Chiedi informazioni su WhatsApp <span className="arrow">↗</span></a>
-          <Link className="detail-back" href="/collezione">← Continua a esplorare</Link>
-        </div>
-      </section>
-      <section className="related-products section-shell"><div className="section-heading"><div><div className="section-index">Potrebbero piacerti</div><h2>Altre possibilità<br /><em>da provare.</em></h2></div><Link className="text-link" href="/collezione">Tutta la collezione <span className="arrow">↗</span></Link></div><div className="related-grid">{related.map((item, index) => <ProductCard product={item} index={index} compact key={item.slug} />)}</div></section>
+        <section className="related" aria-labelledby="related-title">
+          <h2 id="related-title">Potrebbe piacerti anche</h2>
+          <div className="product-grid">{related.map((item) => <ProductCard key={item.slug} product={item} />)}</div>
+        </section>
+      </main>
       <SiteFooter />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
-    </main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    </>
   );
 }

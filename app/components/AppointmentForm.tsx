@@ -5,10 +5,10 @@ import Link from 'next/link';
 
 type ServiceOption = { slug: string; title: string };
 
-export default function AppointmentForm({ whatsappUrl, serviceOptions, initialService = '' }: { whatsappUrl: string; serviceOptions: readonly ServiceOption[]; initialService?: string }) {
+export default function AppointmentForm({ whatsappUrl, serviceOptions }: { whatsappUrl: string; serviceOptions: readonly ServiceOption[] }) {
   const [preparedUrl, setPreparedUrl] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
-  const [selectedService, setSelectedService] = useState(initialService);
+  const [selectedService, setSelectedService] = useState(serviceOptions[0]?.slug ?? '');
 
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get('servizio');
@@ -21,25 +21,22 @@ export default function AppointmentForm({ whatsappUrl, serviceOptions, initialSe
   function submitRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const serviceSlug = String(form.get('service') || '');
-    const service = serviceOptions.find((item) => item.slug === serviceSlug)?.title || 'Da definire insieme';
-    const name = String(form.get('name') || '');
-    const date = String(form.get('date') || '');
-    const time = String(form.get('time') || '');
-    const budget = String(form.get('budget') || '');
-    const notes = String(form.get('notes') || '');
+    const service = serviceOptions.find((item) => item.slug === form.get('service'))?.title ?? 'Da definire insieme';
+    const field = (name: string) => String(form.get(name) || '').trim();
+    const date = field('date');
+    const formattedDate = date ? new Date(`${date}T12:00:00`).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
     const message = [
-      'Ciao Antonella, vorrei richiedere un appuntamento.',
+      'Ciao Antonella, vorrei prenotare.',
       '',
-      `Nome: ${name}`,
+      `Nome: ${field('name')}`,
       `Servizio: ${service}`,
-      date ? `Giorno preferito: ${date}` : '',
-      time ? `Fascia oraria: ${time}` : '',
-      budget ? `Fascia di spesa indicativa: ${budget}` : '',
-      notes ? `Indicazioni: ${notes}` : '',
+      formattedDate ? `Giorno: ${formattedDate}` : null,
+      field('time') ? `Orario: ${field('time')}` : null,
+      field('size') ? `Taglia abituale: ${field('size')}` : null,
+      field('notes') ? `Cosa cerco: ${field('notes')}` : null,
       '',
-      'Attendo la conferma della disponibilità. Grazie!',
-    ].filter(Boolean).join('\n');
+      'Grazie!',
+    ].filter((line) => line !== null).join('\n');
 
     const destination = `${whatsappUrl}?text=${encodeURIComponent(message)}`;
     const popup = window.open(destination, '_blank', 'noopener,noreferrer');
@@ -49,18 +46,47 @@ export default function AppointmentForm({ whatsappUrl, serviceOptions, initialSe
 
   return (
     <form className="appointment-form" onSubmit={submitRequest}>
-      <div className="form-grid">
-        <label className="form-field"><span>Nome e cognome *</span><input name="name" autoComplete="name" required placeholder="Come possiamo chiamarti?" /></label>
-        <label className="form-field"><span>Servizio *</span><select name="service" value={selectedService} onChange={(event) => setSelectedService(event.target.value)} required><option value="" disabled>Scegli un servizio</option>{serviceOptions.map((service) => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select></label>
-        <label className="form-field"><span>Giorno preferito</span><input name="date" type="date" /></label>
-        <label className="form-field"><span>Fascia oraria</span><select name="time" defaultValue=""><option value="">Indifferente</option><option>Mattina</option><option>Pausa pranzo</option><option>Pomeriggio</option><option>Dopo le 18:00</option></select></label>
-        <label className="form-field form-field-wide"><span>Fascia di spesa indicativa</span><select name="budget" defaultValue=""><option value="">Preferisco parlarne insieme</option><option>Fino a 100 €</option><option>100–200 €</option><option>200–350 €</option><option>Oltre 350 €</option></select></label>
-        <label className="form-field form-field-wide"><span>Qualche indicazione utile</span><textarea name="notes" rows={5} maxLength={700} placeholder="Occasione, taglia abituale, colori che ami, ciò che vorresti trovare…" /></label>
+      <label className="field">
+        <span>Nome</span>
+        <input name="name" autoComplete="given-name" required />
+      </label>
+      <label className="field">
+        <span>Cosa ti serve</span>
+        <select name="service" value={selectedService} onChange={(event) => setSelectedService(event.target.value)} required>
+          {serviceOptions.map((service) => <option value={service.slug} key={service.slug}>{service.title}</option>)}
+        </select>
+      </label>
+      <div className="field-row">
+        <label className="field">
+          <span>Giorno preferito</span>
+          <input name="date" type="date" />
+        </label>
+        <label className="field">
+          <span>Orario</span>
+          <select name="time" defaultValue="">
+            <option value="">Indifferente</option>
+            <option>Mattina</option>
+            <option>Pomeriggio</option>
+            <option>Verso sera</option>
+          </select>
+        </label>
       </div>
-      <label className="privacy-check"><input type="checkbox" required /><span>Ho letto l’<Link href="/privacy">informativa privacy</Link> e acconsento all’invio dei dati tramite WhatsApp. *</span></label>
-      <div className="form-submit"><button className="button button-dark" type="submit">Prepara il messaggio <span className="arrow" aria-hidden="true">↗</span></button><p>Il modulo non salva dati: prepara un messaggio che potrai controllare prima di inviare.</p></div>
-      {preparedUrl && !popupBlocked && <p className="form-success" role="status">Il messaggio è pronto su WhatsApp. L’appuntamento sarà valido dopo la conferma della boutique.</p>}
-      {preparedUrl && popupBlocked && <p className="form-success" role="alert">Il browser ha bloccato la nuova finestra. <a href={preparedUrl} target="_blank" rel="noreferrer">Apri il messaggio su WhatsApp</a>.</p>}
+      <label className="field">
+        <span>Taglia abituale <small>(facoltativo)</small></span>
+        <input name="size" placeholder="Per esempio 44 o M" />
+      </label>
+      <label className="field">
+        <span>Cosa cerchi <small>(facoltativo)</small></span>
+        <textarea name="notes" rows={4} maxLength={600} placeholder="Un’occasione, un colore, un capo visto sul sito…" />
+      </label>
+      <label className="check">
+        <input type="checkbox" required />
+        <span>Ho letto l’<Link href="/privacy">informativa privacy</Link> e voglio inviare questi dati tramite WhatsApp.</span>
+      </label>
+      <button className="button" type="submit">Apri WhatsApp con il messaggio</button>
+      <p className="form-hint">Il sito non salva nulla: prepara solo il testo, che potrai modificare prima di inviarlo.</p>
+      {preparedUrl && !popupBlocked && <p className="form-status" role="status">Messaggio pronto su WhatsApp. Ricordati di premere invio.</p>}
+      {preparedUrl && popupBlocked && <p className="form-status" role="alert">Il browser ha bloccato la nuova finestra. <a href={preparedUrl} target="_blank" rel="noreferrer">Apri WhatsApp da qui</a>.</p>}
     </form>
   );
 }
